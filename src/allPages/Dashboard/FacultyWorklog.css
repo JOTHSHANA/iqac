@@ -1,0 +1,130 @@
+/* FacultyWorklogForm.css */
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height:100%;
+    max-width: 100%;
+    padding: 30px;
+    background-color: #f4f7fe;
+    align-items: flex-start; /* Align form items to the left */
+    font-family:sans-serif;
+  }
+  
+  .workLogForm {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-right: 50px;
+    margin-left: 0px;
+    align-items: center;
+    width: 100%;
+    border-radius: 10px;
+    background-color: white;
+    
+  }
+  
+  label {
+    margin-bottom: 10px;
+    padding: auto;
+    color: #2B3674;
+  }
+  
+  .input-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* Align label and input vertically */
+  }
+  
+  .input-label {
+    width: 150px; 
+    
+  }
+  
+  input,
+  select {
+    width: 1000px; /* Fixed width for input fields */
+    margin-left: 10px;
+    margin-top: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border-radius: 10px;
+  }
+  
+  .h2div{
+    display: block;
+  }
+  h1{
+    padding:20px;
+    color: #2B3674;
+  }
+  
+  h2 {
+    color: #2B3674;
+    padding: 10px 10px 10px 10px;
+    border: 1px solid #d9d3d3;
+    border-radius: 5px;
+    background-color: #d9d3d3;
+  }
+  
+  
+  .faSquarePlus{
+    color: #7927e1;
+    margin-left: 900px;
+    padding-right: 10px;
+  }
+  .faTrashCan{
+    color: #7927e1;
+    padding-right: 10px
+  }
+  .faCircleChevronUp{
+    color: #7927e1;
+    padding-right: 10px
+  }
+  .faCircleChevronDown{
+    color: #7927e1;
+    padding-right: 10px
+  }
+  
+  
+  button {
+    width: 70px;
+    border-radius: 5px;
+    padding: 10px 10px 10px 10px;
+    background-color: #7927e1;
+    color: white;
+    cursor: pointer;
+    margin-left: auto; /* Align buttons to the right */
+  }
+  
+  .cancelButton {
+    background-color: red;
+    margin-right: 10px;
+  }
+  
+  
+  
+  /* Align submit button to the right */
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: flex-end; /* Align form items to the left */
+  }
+  
+  
+  
+  .addlog{
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .submitworklog{
+    align-self: flex-end;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }

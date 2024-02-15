@@ -13,7 +13,7 @@ function VerticalNavbar({ onClose }) {
     return (
         <div className='total-v-navbar'>
             <div className={`menu-item ${activeLink === '/' ? 'active' : ''}`} onClick={() => handleLinkClick('/')}>
-                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Dashboard</Link>
+                <Link to="/" className="link-style"><DashboardRoundedIcon className='nav-icons' />Faculty Worklog</Link>
             </div>
             <div className={`menu-item ${activeLink === '/nptel' ? 'active' : ''}`} onClick={() => handleLinkClick('/nptel')}>
                 <Link to="/nptel" className="link-style"><CollectionsBookmarkIcon className='nav-icons' />NPTEL Courses</Link>
