@@ -19,7 +19,7 @@ function Dashboard() {
                 image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTEX9pl8af7Y7nzBN_8gY3XmGZKCzkUOqRcod9oXuBf4g&s"
                 description="sample card description."
             />
-            <Button label='Button' />
+            <Button label='Submit' />
             <Card
                 title="Display the title of the card over here"
                 image="https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg"
