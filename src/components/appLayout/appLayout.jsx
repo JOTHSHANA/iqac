@@ -6,8 +6,12 @@ import HorizontalNavbar from "../horizontalNavbar/horizontalNavbar";
 import VerticalNavbar from "../verticalNavbar/verticalNavbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "../../allPages/dashboard/Dashboard";
-import Nptel from "../../allPages/NPTEL/Nptel";
-import OneCredit from "../../allPages/oneCredit/OneCredit";
+import Nptel from "../../allPages/onlineCourse/Nptel";
+import Home from "../../allPages/onlineCourse/Home";
+import OnlineForm from "../../allPages/onlineCourse/OnlineForm";
+import OneCredit from "../../allPages/onlineCourse/OneCredit";
+import OnlineHome from "../../allPages/onlineCourse/OnlineHome";
+import CreditHome from "../../allPages/onlineCourse/CreditHome";
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -34,8 +38,11 @@ function AppLayout() {
             <div className="content-with-margin">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/nptel" element={<Nptel />} />
-                <Route path="/onecredit" element={<OneCredit />} />
+                <Route path="/onlineCourse" element={<OnlineForm/>}/>
+                <Route path="/onecredit" element={<OneCredit />}/>
+                <Route path="/courseExcp" element={<Home/>}/>
+                <Route path="/OnlineHome" element={<OnlineHome/>}/>
+                <Route path="/CreditHome" element={<CreditHome/>}/>
               </Routes>
             </div>
           </div>

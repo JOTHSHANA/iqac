@@ -1,0 +1,12 @@
+.hometable{
+    margin: 30px;
+}
+.titlehm{
+    margin: 30px;
+}
+.upldBTN{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

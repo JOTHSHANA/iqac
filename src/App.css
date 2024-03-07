@@ -8,16 +8,17 @@ body {
 }
 
 :root {
-  --hover: #4a2a6e;
-  --button: #c491ff85;
-  --card: #D6C6E1;
-  --card-1: #9A73B5;
-  --card-2: #c7a9dc;
-  --text-black: #4A4A4A;
-  --text-grey: #878787;
-  --background: #F5F3F7;
-  --background-1: #E9E4ED;
-  --background-2: #FFFFFF;
+  --hover: #FBFBFB;
+  --button: #116ACC;
+  --card: #FEFEFE;
+  --card-1: #FEFEFE;
+  --card-2: #FEFEFE;
+  --text-black: #2B3674;
+  --text-grey: #68709B;
+  --background: #F4F7FE;
+  --background-1: #FBFBFB;
+  --background-2: #FBFBFB;
+  --text-box: #9CA3AF;
 }
 
 

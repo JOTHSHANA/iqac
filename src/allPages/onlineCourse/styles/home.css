@@ -1,0 +1,38 @@
+.homeCard{
+    display: flex;
+    flex-direction: row;
+    margin: 20px;
+    gap: 50px;
+}
+.titleHome{
+    color: #2B3674;
+    margin: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+.home_rule_main{
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    color: #2B3674;
+    font-family: 'Poppins', sans-serif;
+    justify-content: space-around;
+}
+.rules{
+    width: 40%;
+}
+.titrule{
+    margin-bottom: 20px;
+    color: #2B3674;
+    font-weight: bold;
+}
+.rlOnline{
+    margin-bottom: 10px;
+}
+.ruleBlock{
+    padding: 10px;
+    border: 1px solid  white;
+    background-color: white;
+    box-shadow: 2px 2px 2px 2px lightgray;
+    border-radius: 10px;
+}

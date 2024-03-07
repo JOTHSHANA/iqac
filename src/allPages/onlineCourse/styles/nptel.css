@@ -1,0 +1,111 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Manrope:wght@400;500&family=Poppins&display=swap');
+
+.frm{
+    margin: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    overflow-y: scroll;
+    border-radius: 10px;
+}
+
+.nptelTitle{
+    font-weight: bold;
+    font-size: 16px;
+    padding: 30px;
+}
+/* .nptelTextFields{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} */
+.quesField{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 5%;
+}
+.titdefault{
+    margin: 15px;
+}
+.Default{
+    margin: 10px;
+    border: 1px solid white;
+    box-shadow: 2px 2px 2px 2px lightgray;
+    border-radius: 10px;
+    padding: 20px;
+    width: 80%;
+    background-color: white;
+}
+.dfinside{
+    width: 80%;
+}
+.quesDoc{
+    display: flex;
+    flex-direction: row;
+    /* gap: 48px; */
+    gap: 9%;
+    margin-bottom: 20px;
+}
+.quesDocRp{
+    display: flex;
+    flex-direction: row;
+    /* gap: 48px; */
+    gap: 9%;
+    margin-bottom: 20px;
+}
+.inp{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.textField{
+    width: 80vh;
+}
+.exp{
+    margin-top: 20px;
+}
+.exception{
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+.Rewards{
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+.pdf-upload-button{
+    background-color:  #2B3674;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.EXPsubmits{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 20px;
+}
+.RPsubmits{
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 20px;
+}
+.expCancelBtn{
+    background-color:  #7484DD;
+    color: white;
+    font-size: 18px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}
+.expCreateBtn{
+    background-color:  #2B3674;
+    color: white;
+    font-size: 18px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}

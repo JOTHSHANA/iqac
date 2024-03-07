@@ -1,0 +1,38 @@
+.card {
+    background-color: #D6EAF8;
+    color: var(--text-black);
+    border-radius: 10px;
+    width: 200px;
+    margin: 5px;
+    line-height: 25px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 2px 2px 2px lightgray;
+}
+
+.card-image-container{
+    display: flex;
+    width: 100%;
+}
+
+.card-image{
+    overflow: hidden;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.card-content{
+    margin: 10px;
+}
+
+.card-title{
+    color: #2B3674;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+}
+
+.card-body{
+    font-weight: 550;
+}
