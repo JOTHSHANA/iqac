@@ -1,4 +1,3 @@
-// appLayout.js
 
 import React, { useState } from "react";
 import "./appLayout.css";
@@ -6,12 +5,12 @@ import HorizontalNavbar from "../horizontalNavbar/horizontalNavbar";
 import VerticalNavbar from "../verticalNavbar/verticalNavbar";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "../../allPages/dashboard/Dashboard";
-import Nptel from "../../allPages/onlineCourse/Nptel";
-import Home from "../../allPages/onlineCourse/Home";
-import OnlineForm from "../../allPages/onlineCourse/OnlineForm";
-import OneCredit from "../../allPages/onlineCourse/OneCredit";
-import OnlineHome from "../../allPages/onlineCourse/OnlineHome";
-import CreditHome from "../../allPages/onlineCourse/CreditHome";
+import Home from "../../allPages/CourseException/Home"
+import OnlineForm from '../../allPages/CourseException/OnlineCourse/OnlineForm'
+import OneCredit from "../../allPages/CourseException/OneCredit/OneCredit"
+import OnlineHome from "../../allPages/CourseException/OnlineCourse/OnlineHome"
+import CreditHome from "../../allPages/CourseException/OneCredit/CreditHome"
+
 
 function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

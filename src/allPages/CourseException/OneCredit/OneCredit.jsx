@@ -3,9 +3,9 @@ import Select from 'react-select'
 import axios from 'axios'
 import dayjs from 'dayjs';
 import { DatePicker } from 'antd';
-import './styles/oneCredit.css'
+import '../styles/oneCredit.css'
 import TextField from '@mui/material/TextField';
-import pdf from '../../assets/courseExceptionPdf/Online.pdf'
+import pdf from '../../../assets/courseExceptionPdf/Online.pdf'
 
 const OneCredit = () => {
   const [users, setUsers] = useState([]);

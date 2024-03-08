@@ -1,33 +1,31 @@
 import React from 'react'
-import OnlineTable from './stuffs/OnlineTable'
-import './styles/onlineHome.css'
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useNavigate } from 'react-router-dom'
+import OneCreditTable from '../stuffs/OneCreditTable';
 
-const OnlineHome = () => {
+const CreditHome = () => {
   const navigate = useNavigate()
 
   return (
     <div>
         <div className="titlehm">
-            <h4>Online Course</h4>
+            <h4>One Credit</h4>
         </div>
         <div className='hometable' >
-            <OnlineTable/>
+            <OneCreditTable/>
         </div>
         <div className='upldBTN' >
             <div>
-                <h4>Upload Online Course Here</h4>
+                <h4>Upload Your One Credit Here</h4>
             </div>
             <div>
-                <div className='card-add-icon' onClick={()=>{navigate('/onlineCourse')}} style={{cursor:'pointer'}}>
+                <div className='card-add-icon' onClick={()=>{navigate('/onecredit')}} style={{cursor:'pointer'}}>
                         <AddBoxIcon className='add-icon' sx={{ fontSize: 32 }}/>
                 </div>
             </div>
         </div>
-        
     </div>
   )
 }
 
-export default OnlineHome
+export default CreditHome

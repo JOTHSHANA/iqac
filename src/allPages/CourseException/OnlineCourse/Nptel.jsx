@@ -2,16 +2,16 @@ import React, { useState , useEffect } from 'react'
 import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
 import pdf from '../../assets/courseExceptionPdf/Online.pdf'
 import axios from 'axios';
-import InputBox from '../../components/InputBox/inputbox';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import Select from 'react-select'
-import "./styles/nptel.css"
+import "../styles/nptel.css"
 import TextField from '@mui/material/TextField';
 
-const OnlineForm = () => {
 
-const [selectedWeek, setSelectedWeek] = useState("");
+const Nptel = () => {
+    // Use States to Store all the values of input boxes to validate
+    const [selectedWeek, setSelectedWeek] = useState('');
     const [course,setCourse] = useState('')
     const [selectedSem,setSelectedSem] = useState('')
     const [startDate, setStartDate] = useState(null);
@@ -19,7 +19,6 @@ const [selectedWeek, setSelectedWeek] = useState("");
     const [examDate,setExamDate] = useState(null);
     const [numberOfDays, setNumberOfDays] = useState(0);
     const [opinion,setOpinion] = useState(null);
-    const [creditOpen,setCreditOpen] = useState(null);
     const [selectedCredits,setSelectedCredits] = useState(null)
     const [openings,setOpenings] = useState(false)
     const [selectedFile, setSelectedFile] = useState(null);
@@ -89,15 +88,8 @@ const [selectedWeek, setSelectedWeek] = useState("");
           if (customCourse) {
             setCourse(customCourse);
           }
-        }
-        else if(selectedCourse==="NPTEL"){
-            setCreditOpen(true);
-            setCourse(selectedCourse);
-
-        }
-        else {
+        } else {
           setCourse(selectedCourse);
-          setCreditOpen(false);
         }
       } else {
         // Handle case where selectedOption is null (e.g., clearing selection)
@@ -200,25 +192,25 @@ const [selectedWeek, setSelectedWeek] = useState("");
     setSelectedFile(event.target.files[0]);
   }
 
-  // Functions for mapping the data from api to the select component
   const selectOptions = users.map(user => ({
-    value: user.name,
-    label: user.name,
+    value: user.user_name,
+    label: user.user_name,
   }));
 
   const rollnumber = users.map(user=>({
-    value : user.register_number,
-    label : user.register_number,
+    value : user.user_id,
+    label : user.user_id,
   }))
   
   return (
-    <div className='frm'>
+    <div>
+      <div style={{ display: "flex", flexDirection: "row" }}>
         <div>
+          <div className="nptelTitle">
+            <h4>Online Course</h4>
+          </div>
           <div className="nptelTextFields">
             <div>
-            <div className='titdefault' ><h4>Default Details</h4></div>
-            <div className='Default' >
-            <div className='dfinside'>
               <div className="quesField">
                 <div className="inp">Student</div>
                 <div>
@@ -246,32 +238,25 @@ const [selectedWeek, setSelectedWeek] = useState("");
               <div className="quesField">
                 <div className="inp">Year Of Study</div>
                 <div>
-                  <Select
+                  <TextField
+                    size="small"
                     className="textField"
-                    // options={selectOptions}
-                    isSearchable
-                    isClearable
-                    placeholder=""
-                  ></Select>
+                    id="outlined-basic"
+                    variant="outlined"
+                  />
                 </div>
               </div>
               <div className="quesField">
                 <div className="inp">Special Lab</div>
                 <div>
-                  <Select
+                  <TextField
+                    size="small"
                     className="textField"
-                    // options={selectOptions}
-                    isSearchable
-                    isClearable
-                    placeholder=""
-                  ></Select>
+                    id="outlined-basic"
+                    variant="outlined"
+                  />
                 </div>
               </div>
-              </div>
-            </div>
-              <div className='titdefault' ><h4>Course Details</h4></div>
-              <div className='Default' >
-              <div className='dfinside' >
               <div className="quesField">
                 <div className="inp">Course Type</div>
                 <div>
@@ -294,11 +279,14 @@ const [selectedWeek, setSelectedWeek] = useState("");
               <div className="quesField">
                 <div className="inp">Name Of the Course</div>
                 <div>
-                <InputBox/>
+                  <TextField
+                    size="small"
+                    className="textField"
+                    id="outlined-basic"
+                    variant="outlined"
+                  />
                 </div>
               </div>
-              {creditOpen ? 
-              <>
               <div className="quesField">
                 <div className="inp">Duration in Weeks</div>
                 <div>
@@ -342,7 +330,7 @@ const [selectedWeek, setSelectedWeek] = useState("");
                   />
                   {/* {selectedCredits && <div> Credits : {selectedCredits} </div>} */}
                 </div>
-              </div> </> : null }
+              </div>
               <div className="quesField">
                 <div className="inp">Semester</div>
                 <div>
@@ -415,15 +403,9 @@ const [selectedWeek, setSelectedWeek] = useState("");
                   </div>
                 </div>
               ) : null}
-                </div>
-                </div>
-
               {openings && handleValidation() ? (
-                <div>
-                <div className='titdefault' ><h4>Apply For Course Exception</h4></div>
-                <div className='Default' >
-                <div className='dfinside' >
                 <div className="exp">
+                  <div className="exception">Apply For Course Exception</div>
                   <div className="quesField">
                     <div className="inp">Exam Date</div>
                     <div>
@@ -447,7 +429,14 @@ const [selectedWeek, setSelectedWeek] = useState("");
                   </div>
                   <div className="quesField">
                     <div className="inp">Certificate URL</div>
-                    <InputBox/>
+                    <div>
+                      <TextField
+                        size="small"
+                        className="textField"
+                        id="outlined-basic"
+                        variant="outlined"
+                      />
+                    </div>
                   </div>
                   <div className="quesDoc">
                     <div>Upload Certificate </div>
@@ -470,12 +459,19 @@ const [selectedWeek, setSelectedWeek] = useState("");
                       </div>
                     </div>
                   </div>
-                  {/* <div className="quesField">
+                  <div className="quesField">
                     <div className="inp">IQAC Verification</div>
                     <div>
-                    <InputBox/>
+                      <TextField
+                        disabled
+                        size="small"
+                        className="textField"
+                        id="outlined-disabled"
+                        label="Initiated"
+                        defaultValue="Initiated"
+                      />
                     </div>
-                  </div> */}
+                  </div>
                   <div className="EXPsubmits">
                     <button className="expCancelBtn">Cancel</button>
                     <button className="expCreateBtn" onClick={modifyPdf}>
@@ -483,19 +479,18 @@ const [selectedWeek, setSelectedWeek] = useState("");
                     </button>
                   </div>
                 </div>
-                </div>
-                </div>
-                </div>
               ) : (
-                <div>
-                <div className='titdefault' ><h4>Apply For Rewards</h4></div>
-                <div className='Default' >
-                <div className='dfinside' >
                 <div className="rp">
+                  <div className="Rewards">Apply For Reward Points</div>
                   <div className="quesField">
                     <div className="inp">Certificate URL</div>
                     <div>
-                    <InputBox/>
+                      <TextField
+                        size="small"
+                        className="textField"
+                        id="outlined-basic"
+                        variant="outlined"
+                      />
                     </div>
                   </div>
                   <div className={handleValidation() ? "quesDoc" : "quesDocRp"}>
@@ -519,26 +514,29 @@ const [selectedWeek, setSelectedWeek] = useState("");
                       </div>
                     </div>
                   </div>
-                  {/* <div className="quesField">
+                  <div className="quesField">
                     <div className="inp">IQAC Verification</div>
                     <div>
-                    <InputBox/>
+                      <TextField
+                        disabled
+                        size="small"
+                        className="textField"
+                        id="outlined-disabled"
+                        defaultValue="Initiated"
+                      />
                     </div>
-                  </div> */}
+                  </div>
                   <div className="RPsubmits">
                     <button className="expCancelBtn">Cancel</button>
                     <button className="expCreateBtn">Create</button>
                   </div>
                 </div>
-                </div>
-                </div>
-                </div>
               )}
             </div>
           </div>
         </div>
+      </div>
     </div>
   );
 }
-
-export default OnlineForm
+export default Nptel

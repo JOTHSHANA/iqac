@@ -1,0 +1,58 @@
+/* Apply these styles to the container of your table */
+.datagrid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* width: 100%; */
+    overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+/* Default styles */
+.tableMain {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* Apply styles to the table */
+.MuiDataGrid-root {
+    border: 1px solid #ccc; /* Add a border around the table */
+    border-collapse: collapse; /* Collapse border spacing */
+}
+
+/* Apply styles to table cells */
+.MuiDataGrid-root .MuiDataGrid-cell {
+    padding: 8px; /* Add padding to cells */
+    border-bottom: 1px solid #ccc; /* Add border bottom to separate rows */
+}
+
+/* Apply styles to header cells */
+.MuiDataGrid-root .MuiDataGrid-colCellTitle {
+    padding: 8px; /* Add padding to header cells */
+    background-color: #f0f0f0; /* Light background color for header row */
+    font-weight: bold; /* Make header text bold */
+}
+
+/* Apply styles to header row */
+.MuiDataGrid-root .MuiDataGrid-colCellWrapper {
+    background-color: #f0f0f0; /* Light background color for header row */
+}
+
+/* Apply alternating row colors */
+.MuiDataGrid-root .MuiDataGrid-row:nth-child(even) {
+    background-color: #f9f9f9; /* Light gray background for even rows */
+}
+
+/* Media query for smaller screens */
+@media only screen and (max-width: 600px) {
+    .tableMain {
+        overflow-x: auto;
+    }
+    .MuiDataGrid-root {
+        font-size: 12px; /* Decrease font size for smaller screens */
+    }
+    .MuiDataGrid-root .MuiDataGrid-cell,
+    .MuiDataGrid-root .MuiDataGrid-colCellTitle,
+    .MuiDataGrid-root .MuiDataGrid-colCellWrapper {
+        padding: 4px; /* Decrease padding for cells and headers */
+    }
+}

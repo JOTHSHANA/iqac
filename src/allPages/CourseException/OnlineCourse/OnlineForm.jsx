@@ -1,17 +1,17 @@
 import React, { useState , useEffect } from 'react'
 import { degrees, PDFDocument, rgb, StandardFonts } from 'pdf-lib';
-import pdf from '../../assets/courseExceptionPdf/Online.pdf'
+import pdf from '../../../assets/courseExceptionPdf/Online.pdf'
 import axios from 'axios';
+import InputBox from '../../../components/InputBox/inputbox';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import Select from 'react-select'
-import "./styles/nptel.css"
+import "../styles/nptel.css"
 import TextField from '@mui/material/TextField';
 
+const OnlineForm = () => {
 
-const Nptel = () => {
-    // Use States to Store all the values of input boxes to validate
-    const [selectedWeek, setSelectedWeek] = useState('');
+    const [selectedWeek, setSelectedWeek] = useState("");
     const [course,setCourse] = useState('')
     const [selectedSem,setSelectedSem] = useState('')
     const [startDate, setStartDate] = useState(null);
@@ -19,6 +19,7 @@ const Nptel = () => {
     const [examDate,setExamDate] = useState(null);
     const [numberOfDays, setNumberOfDays] = useState(0);
     const [opinion,setOpinion] = useState(null);
+    const [creditOpen,setCreditOpen] = useState(null);
     const [selectedCredits,setSelectedCredits] = useState(null)
     const [openings,setOpenings] = useState(false)
     const [selectedFile, setSelectedFile] = useState(null);
@@ -88,8 +89,15 @@ const Nptel = () => {
           if (customCourse) {
             setCourse(customCourse);
           }
-        } else {
+        }
+        else if(selectedCourse==="NPTEL"){
+            setCreditOpen(true);
+            setCourse(selectedCourse);
+
+        }
+        else {
           setCourse(selectedCourse);
+          setCreditOpen(false);
         }
       } else {
         // Handle case where selectedOption is null (e.g., clearing selection)
@@ -192,25 +200,29 @@ const Nptel = () => {
     setSelectedFile(event.target.files[0]);
   }
 
+  const handleSubmit = () => {
+    
+  }
+
+  // Functions for mapping the data from api to the select component
   const selectOptions = users.map(user => ({
-    value: user.user_name,
-    label: user.user_name,
+    value: user.name,
+    label: user.name,
   }));
 
   const rollnumber = users.map(user=>({
-    value : user.user_id,
-    label : user.user_id,
+    value : user.register_number,
+    label : user.register_number,
   }))
   
   return (
-    <div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
+    <div className='frm'>
         <div>
-          <div className="nptelTitle">
-            <h4>Online Course</h4>
-          </div>
           <div className="nptelTextFields">
             <div>
+            <div className='titdefault' ><h4>Default Details</h4></div>
+            <div className='Default' >
+            <div className='dfinside'>
               <div className="quesField">
                 <div className="inp">Student</div>
                 <div>
@@ -238,25 +250,32 @@ const Nptel = () => {
               <div className="quesField">
                 <div className="inp">Year Of Study</div>
                 <div>
-                  <TextField
-                    size="small"
+                  <Select
                     className="textField"
-                    id="outlined-basic"
-                    variant="outlined"
-                  />
+                    // options={selectOptions}
+                    isSearchable
+                    isClearable
+                    placeholder=""
+                  ></Select>
                 </div>
               </div>
               <div className="quesField">
                 <div className="inp">Special Lab</div>
                 <div>
-                  <TextField
-                    size="small"
+                  <Select
                     className="textField"
-                    id="outlined-basic"
-                    variant="outlined"
-                  />
+                    // options={selectOptions}
+                    isSearchable
+                    isClearable
+                    placeholder=""
+                  ></Select>
                 </div>
               </div>
+              </div>
+            </div>
+              <div className='titdefault' ><h4>Course Details</h4></div>
+              <div className='Default' >
+              <div className='dfinside' >
               <div className="quesField">
                 <div className="inp">Course Type</div>
                 <div>
@@ -279,14 +298,11 @@ const Nptel = () => {
               <div className="quesField">
                 <div className="inp">Name Of the Course</div>
                 <div>
-                  <TextField
-                    size="small"
-                    className="textField"
-                    id="outlined-basic"
-                    variant="outlined"
-                  />
+                <InputBox/>
                 </div>
               </div>
+              {creditOpen ? 
+              <>
               <div className="quesField">
                 <div className="inp">Duration in Weeks</div>
                 <div>
@@ -330,7 +346,7 @@ const Nptel = () => {
                   />
                   {/* {selectedCredits && <div> Credits : {selectedCredits} </div>} */}
                 </div>
-              </div>
+              </div> </> : null }
               <div className="quesField">
                 <div className="inp">Semester</div>
                 <div>
@@ -403,9 +419,15 @@ const Nptel = () => {
                   </div>
                 </div>
               ) : null}
+                </div>
+                </div>
+
               {openings && handleValidation() ? (
+                <div>
+                <div className='titdefault' ><h4>Apply For Course Exception</h4></div>
+                <div className='Default' >
+                <div className='dfinside' >
                 <div className="exp">
-                  <div className="exception">Apply For Course Exception</div>
                   <div className="quesField">
                     <div className="inp">Exam Date</div>
                     <div>
@@ -429,14 +451,7 @@ const Nptel = () => {
                   </div>
                   <div className="quesField">
                     <div className="inp">Certificate URL</div>
-                    <div>
-                      <TextField
-                        size="small"
-                        className="textField"
-                        id="outlined-basic"
-                        variant="outlined"
-                      />
-                    </div>
+                    <InputBox/>
                   </div>
                   <div className="quesDoc">
                     <div>Upload Certificate </div>
@@ -459,19 +474,12 @@ const Nptel = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="quesField">
+                  {/* <div className="quesField">
                     <div className="inp">IQAC Verification</div>
                     <div>
-                      <TextField
-                        disabled
-                        size="small"
-                        className="textField"
-                        id="outlined-disabled"
-                        label="Initiated"
-                        defaultValue="Initiated"
-                      />
+                    <InputBox/>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="EXPsubmits">
                     <button className="expCancelBtn">Cancel</button>
                     <button className="expCreateBtn" onClick={modifyPdf}>
@@ -479,18 +487,19 @@ const Nptel = () => {
                     </button>
                   </div>
                 </div>
+                </div>
+                </div>
+                </div>
               ) : (
+                <div>
+                <div className='titdefault' ><h4>Apply For Rewards</h4></div>
+                <div className='Default' >
+                <div className='dfinside' >
                 <div className="rp">
-                  <div className="Rewards">Apply For Reward Points</div>
                   <div className="quesField">
                     <div className="inp">Certificate URL</div>
                     <div>
-                      <TextField
-                        size="small"
-                        className="textField"
-                        id="outlined-basic"
-                        variant="outlined"
-                      />
+                    <InputBox/>
                     </div>
                   </div>
                   <div className={handleValidation() ? "quesDoc" : "quesDocRp"}>
@@ -514,29 +523,26 @@ const Nptel = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="quesField">
+                  {/* <div className="quesField">
                     <div className="inp">IQAC Verification</div>
                     <div>
-                      <TextField
-                        disabled
-                        size="small"
-                        className="textField"
-                        id="outlined-disabled"
-                        defaultValue="Initiated"
-                      />
+                    <InputBox/>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="RPsubmits">
                     <button className="expCancelBtn">Cancel</button>
-                    <button className="expCreateBtn">Create</button>
+                    <button className="expCreateBtn" onClick={handleSubmit} >Create</button>
                   </div>
+                </div>
+                </div>
+                </div>
                 </div>
               )}
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 }
-export default Nptel
+
+export default OnlineForm

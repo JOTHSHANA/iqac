@@ -29,7 +29,8 @@ const darkModeProperties = {
     '--menu-text-hover': '#FFFFFF',
     '--card-text': '#FFFFFF',
     '--icon-hover-backgrd':'#251d30',
-    '--add-icon': '#FFFFFF'
+    '--add-icon': '#FFFFFF',
+    '--heading-crsExp':'#EAEAEA'
 };
 const lightModeProperties = {
     '--thumb-color': '#61398F',
@@ -48,7 +49,8 @@ const lightModeProperties = {
     '--menu-text-hover': '#61398F',
     '--card-text': '#FFFFFF',
     '--icon-hover-backgrd':'#61398F',
-    '--add-icon': '#61398F'
+    '--add-icon': '#61398F',
+    '--heading-crsExp':'#2B3674'
     
 };
 
