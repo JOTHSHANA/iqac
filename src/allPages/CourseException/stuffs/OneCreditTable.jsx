@@ -14,16 +14,16 @@ const OneCreditTable = () => {
       ];
       
       const columns = [
-        { field: 'student', headerName: 'Student', width: 90 },
-        { field: 'registerNumber', headerName: 'Register Number', width: 150 },
-        { field: 'yearOfStudy', headerName: 'Year Of Study', width: 150 },
-        { field: 'specialLab', headerName: 'Special Lab', width: 150 },
-        { field: 'courseType', headerName: 'Course Type', width: 150 },
-        { field: 'courseName', headerName: 'Course Name', width: 150 },
-        { field: 'weeks', headerName: 'Duration Of Weeks', width: 150 },
-        { field: 'credits', headerName: 'No of Credits', width: 150 },
-        { field: 'semester', headerName: 'Semester', width: 150 },
-        { field: 'credits', headerName: 'No of Credits', width: 150 },
+        { field: 'student', headerName: 'Student' },
+        { field: 'registerNumber', headerName: 'Register Number' },
+        { field: 'yearOfStudy', headerName: 'Year Of Study' },
+        { field: 'specialLab', headerName: 'Special Lab' },
+        { field: 'courseType', headerName: 'Course Type' },
+        { field: 'courseName', headerName: 'Course Name' },
+        { field: 'weeks', headerName: 'Duration Of Weeks' },
+        { field: 'credits', headerName: 'No of Credits' },
+        { field: 'semester', headerName: 'Semester' },
+        { field: 'credits', headerName: 'No of Credits' },
       ];
 
     

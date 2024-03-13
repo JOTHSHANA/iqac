@@ -5,8 +5,10 @@ function InputBox(props) {
         <div>
             <input
                 className='inputbox'
+                
                 type={props.type}
                 name={props.name}
+                onChange={props.onchange}
                 placeholder={props.placeholder}
             />
         </div>

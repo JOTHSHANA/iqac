@@ -63,6 +63,11 @@
 .textField{
     width: 80vh;
 }
+.errorText{
+    color: rgb(236, 119, 119);
+    font-size: 12px;
+}
+
 .exp{
     margin-top: 20px;
 }

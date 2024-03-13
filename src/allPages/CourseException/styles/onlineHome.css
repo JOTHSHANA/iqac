@@ -1,12 +1,32 @@
 .hometable{
     margin: 30px;
+    margin-top: 10px;
 }
 .titlehm{
     margin: 30px;
+    margin-bottom: 20px;
 }
 .upldBTN{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.titleBtn{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.createDiv{
+    margin: 30px;
+    margin-bottom: 20px;
+}
+.CreateBtn{
+    padding: 5px;
+    border: none;
+    background-color:  var(--heading-crsExp);
+    color: white;
+    border-radius: 5px;
+    font-size: 15px;
+    cursor: pointer;
 }

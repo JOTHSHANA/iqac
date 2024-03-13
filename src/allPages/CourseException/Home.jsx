@@ -1,38 +1,42 @@
-import React from 'react'
-import online from '../../assets/images/nptel.png'
-import one from '../../assets/images/oneCredit.png'
-import intern from '../../assets/images/Internship.png'
+import React, { useEffect, useState } from 'react'
+// import online from '../../assets/images/nptel.png'
+// import one from '../../assets/images/oneCredit.png'
+// import intern from '../../assets/images/Internship.png'
 import Card from './stuffs/Card'
+import axios from 'axios';
 import './styles/home.css'
 import { useNavigate } from 'react-router-dom'
+import {apiBaseUrl} from '../../api/api'
 
 const Home = () => {
   const navigate = useNavigate()
+  const [courseData, setCourseData] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${apiBaseUrl}/api/ce/available`)
+      .then(response => {
+        setCourseData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching course data:', error);
+      });
+  }, []);
+
   return (
     <div>
         <div style={{display:'flex',flexDirection:"row"}}>
             <div className='home' >
             <div className= 'titleHome' >Seeking for course exemptions and rewards? </div>
             <div className='homeCard' >
-            <div onClick={()=>{navigate('/OnlineHome')}} style={{cursor:'pointer'}} >
-              <Card 
-              title="Online Course"
-              image={online}
-              />
-            </div>
-            <div onClick={()=>{navigate('/CreditHome')}} style={{cursor:'pointer'}} >
-            <Card
-              title="One Credit"
-              image={one}
-              />
-            </div>
-            <div>
-            <Card
-              title="Internship"
-              image={intern}
-              />
-            </div>
-            </div>
+            {courseData.map(course => (
+              <div key={course.id} onClick={() => navigate('/OnlineHome')} style={{ cursor: 'pointer' }} >
+                <Card
+                  title={course.name}
+                  image={`${apiBaseUrl}/${course.image_path}`}
+                />
+              </div>
+            ))}
+          </div>
             <div className='home_rule_main'>
               <div className='rules' >
                 <div className='titrule' >Rules For Applying Course Exception</div>
