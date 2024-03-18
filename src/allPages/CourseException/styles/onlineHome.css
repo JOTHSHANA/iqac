@@ -1,6 +1,8 @@
 .hometable{
     margin: 30px;
     margin-top: 10px;
+    display: flex;
+    justify-content: center;
 }
 .titlehm{
     margin: 30px;

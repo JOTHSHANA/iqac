@@ -2,27 +2,23 @@ import React from 'react'
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { useNavigate } from 'react-router-dom'
 import OneCreditTable from '../stuffs/OneCreditTable';
+import "../styles/creditHome.css"
 
 const CreditHome = () => {
   const navigate = useNavigate()
 
   return (
-    <div>
+    <div className='creditHomeMain' >
+        <div className='titleBtn' >
         <div className="titlehm">
             <h4>One Credit</h4>
         </div>
+        <div className='createDiv' >
+            <button type='disabled' className='CreateBtn'  >Course Exception</button>
+        </div>
+        </div>
         <div className='hometable' >
             <OneCreditTable/>
-        </div>
-        <div className='upldBTN' >
-            <div>
-                <h4>Upload Your One Credit Here</h4>
-            </div>
-            <div>
-                <div className='card-add-icon' onClick={()=>{navigate('/onecredit')}} style={{cursor:'pointer'}}>
-                        <AddBoxIcon className='add-icon' sx={{ fontSize: 32 }}/>
-                </div>
-            </div>
         </div>
     </div>
   )

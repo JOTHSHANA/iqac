@@ -16,11 +16,13 @@ const OnlineForm = () => {
     const [courseStatus,setCourseStatus] = useState("");
     const [selectedSem,setSelectedSem] = useState('')
     const [student,setStudent] = useState(null);
-    const [registerNumber,setRegisterNumber] = useState(null);
+    const [registerNumber,setRegisterNumber] = useState("");
     const [error,setError] = useState(false)
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [examDate,setExamDate] = useState(null);
+    const [fmtStartDate,setFmtStartDate] = useState(null);
+    const [fmtEndDate,setFmtEndDate] = useState(null);
     const [numberOfDays, setNumberOfDays] = useState(0);
     const [opinion,setOpinion] = useState(null);
     const [creditOpen,setCreditOpen] = useState(null);
@@ -29,30 +31,40 @@ const OnlineForm = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [users, setUsers] = useState([])
     const [courseType,setCourseType] = useState([])
+    const [courseNames, setCourseNames] = useState([]);
     const [weekData,setWeekData] = useState([])
     const [names,setNames] = useState([]);
     const [lab,setLab] = useState(null);
     const [year,setYear] = useState(null);
     const [crname,setCrname] = useState(null);
     const [certificateUrl,setCertificateUrl] = useState(null);
+    const [validWeek,setValidWeek] = useState(null);
+    const [validCredit,setValidCredit] = useState(null);
+    const [validSemester,setValidSemester] = useState(null);
+
     // Function to fetch users from the API
     const fetchUsers = async () => {
       try {
         // const response = await axios.get('http://localhost:5000/api/users');
         const type = await axios.get('http://localhost:5000/type');
-        const week = await axios.get('http://localhost:5000/week');
+        const weeks = await axios.get('http://localhost:5000/week');
         const names_api = await axios.get('http://localhost:5000/api/users');
-
+        const valid = await axios.get('http://localhost:5000/courseExpValidation');
         // If request is successful, set the users state with the fetched data
         // setUsers(response.data);
         setCourseType(type.data);
-        setWeekData(week.data);
+        setWeekData(weeks.data);
         setNames(names_api.data);
+        const {week,credit,semester} = valid.data[0];
+        setValidWeek(week);
+        setValidCredit(credit);
+        setValidSemester(semester);
       } catch (error) { 
         // If an error occurs, log the error
         console.error('Error fetching users:', error);
       }
     };
+
     //Loading the PDF from the utils folder
     useEffect(() => {
       const loadPdf = async () => {
@@ -98,18 +110,25 @@ const OnlineForm = () => {
       setSelectedWeek(selectedOption.value);
     };
     // Function to handle Course Selection 
-    const handleCourse = (course) => {
+    const handleCourse = async (course) => {
       if (course) {
         console.log(course);
         const selectedCourse = course.value;
-        if (selectedCourse === "Others") {
-          // Show input field for custom course
-          const customCourse = window.prompt("Enter custom course:");
-          if (customCourse) {
-            setCourse(customCourse);  
-          }
+        try {
+          const response = await axios.get(`http://localhost:5000/courseNames/${selectedCourse}`);
+          setCourseNames(response.data);
+        } catch (error) {
+          console.error('Error fetching course names:', error);
         }
-        else if(selectedCourse===1){
+        // if (selectedCourse === "Others") {
+        //   // Show input field for custom course
+        //   const customCourse = window.prompt("Enter custom course:");
+        //   if (customCourse) {
+        //     setCourse(customCourse);  
+        //   }
+        // }
+        // else 
+        if(selectedCourse>0){
             setCreditOpen(true);
             setCourse(course.label);
             setCourseStatus(course.value);
@@ -147,7 +166,8 @@ const OnlineForm = () => {
     }
     if (date && typeof date === 'object' && date.$isDayjsObject) {
         const nativeDate = date.toDate();
-        console.log("Selected Start Date:", formatDate(nativeDate));
+        const formatdate = formatDate(nativeDate);
+        setFmtStartDate(formatdate)
     }
     }
   };
@@ -169,7 +189,8 @@ const OnlineForm = () => {
       if (date && typeof date === 'object' && date.$isDayjsObject) {
         // Extract the native Date object from the Day.js object
         const nativeDate = date.toDate();
-        console.log("Selected End Date:", formatDate(nativeDate));
+        const formatdate = formatDate(nativeDate);
+        setFmtEndDate(formatdate)
       }      
     }
   };
@@ -207,7 +228,7 @@ const OnlineForm = () => {
   // Function for exception validation
   const handleValidation = () => {
     console.log("function called");
-    if(courseStatus === 1 && selectedCredits >= 3 && selectedSem >= 4 && selectedWeek === "12" ){
+    if(courseStatus > 0 && ( selectedCredits >= validCredit ) && (selectedSem >= validSemester) && (selectedWeek >= validWeek) ){
       return true;
     }
     else{
@@ -225,6 +246,7 @@ const OnlineForm = () => {
     const selectedStudent = selectedOption ? selectedOption.value : null;
     // Set the selected student in the state
     setStudent(selectedStudent);
+    console.log(validCredit);
 
   };
 
@@ -244,6 +266,7 @@ const OnlineForm = () => {
 
   const handleYear = (year) => {
     setYear(year.value);
+    console.log(registerNumber);
   }
 
   const handleRegisterNumber = (registerNumber) => {
@@ -251,30 +274,46 @@ const OnlineForm = () => {
     console.log(student);
   }
 
-  const handleSubmit = async () => {
-    try {
-      const postData = {
-        student: student,
-        register_number: registerNumber,
-        year: year,
-        course_type: course,
-        name_of_course: crname,
-        semester: selectedSem,
-        start_date: formatDate(startDate),
-        end_date: formatDate(endDate),
-        // certificate_url: certificateUrl
-      };
+  // const handleSubmit = async () => {
+  //   try {
+  //     const postData = {
+  //       student: student,
+  //       register_number: registerNumber,
+  //       year: year,
+  //       course_type: course,
+  //       name_of_course: crname,
+  //       semester: selectedSem,
+  //       start_date: fmtStartDate,
+  //       end_date: fmtEndDate,
+  //       // certificate_url: certificateUrl
+  //     };
       
-      // Make a POST request to the backend endpoint
-      const response = await axios.post('http://localhost:5000/api/users', postData);
+  //     // Make a POST request to the backend endpoint
+  //     const response = await axios.post('http://localhost:5000/api/addUsers', postData);
 
-      // Handle the response as needed
-      console.log('Response:', response.data);
-    } catch (error) {
-      // Handle errors
-      console.error('Error:', error);
+  //     // Handle the response as needed
+  //     console.log('Response:', response.data);
+  //   } catch (error) {
+  //     // Handle errors
+  //     console.error('Error:', error);
+  //   }
+  // }; 
+
+  const handleSubmit = async () => {
+    if(!course||!crname){
+      setError(true)
     }
-  };
+    console.log(student);
+    console.log(registerNumber);
+    console.log(year);
+    console.log(course);
+    console.log(crname);
+    console.log(selectedSem);
+    console.log(fmtStartDate);
+    console.log(fmtEndDate);
+  }
+
+
 
   // Functions for mapping the data from api to the select component
   const selectOptions = users.map(user => ({
@@ -298,7 +337,7 @@ const OnlineForm = () => {
   }))
 
   const CourseList = courseType.map(types => ({
-    value : types.status,
+    value : types.course_id,
     label : types.type,
   }))
 
@@ -368,12 +407,16 @@ const OnlineForm = () => {
                 <div className="inp">Year Of Study</div>
                 <div>
                   <Select
-                    
                     className="textField"
                     options={years}
                     onChange={handleYear}
                     isSearchable
-                
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: error && (!year) ? 'red' : '#cccdce',
+                      }),
+                    }}
                     placeholder=""
                   ></Select>
                 </div>
@@ -382,10 +425,15 @@ const OnlineForm = () => {
                 <div className="inp">Special Lab</div>
                 <div>
                   <Select
-                    value={{value: lab, label: lab}}
                     className="textField"
                     options={labList}
                     onChange={handleLab}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: error && (!lab) ? 'red' : '#cccdce',
+                      }),
+                    }}
                     isSearchable
                     placeholder=""
                   ></Select>
@@ -400,12 +448,17 @@ const OnlineForm = () => {
                 <div className="inp">Course Type</div>
                 <div>
                   <Select
-                    // value={{ value: course, label: course }}
                     onChange={handleCourse}
                     placeholder=""
                     isSearchable
                     className='textField'
                     options={CourseList}
+                    styles={{
+                      control: (baseStyles, state) => ({
+                        ...baseStyles,
+                        borderColor: error && (!course) ? 'red' : '#cccdce',
+                      }),
+                    }}
                     // options={[
                     //   { value: "NPTEL", label: "NPTEL" },
                     //   { value: "COURSERA", label: "Coursera" },
@@ -441,10 +494,6 @@ const OnlineForm = () => {
                 <div className="inp">Duration in Weeks</div>
                 <div>
                   <Select
-                    value={{
-                      value: selectedWeek,
-                      label: selectedWeek ? `${selectedWeek} weeks` : "",
-                    }}
                     onChange={handleWeek}
                     className="textField"
                     options={weekList}
@@ -454,7 +503,7 @@ const OnlineForm = () => {
                     //   { value: "12", label: "12 Weeks" },
                     // ]}
                     isSearchable={false}
-                    placeholder="Select weeks..."
+                   
                   />
                   {/* {selectedWeek && <div> Weeks : {selectedWeek} </div>} */}
                 </div>
@@ -527,9 +576,9 @@ const OnlineForm = () => {
                     value={endDate}
                     onChange={handleEndDateChange}
                   />
-                  {startDate && endDate && (
+                  {/* {startDate && endDate && (
                     <p>Number of days between selected dates: {numberOfDays}</p>
-                  )}
+                  )} */}
                 </div>
               </div>
               {handleValidation() ? (

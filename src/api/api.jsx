@@ -1,3 +1,3 @@
-const ipAddress = 'http://10.10.179.76:5000';
+const ipAddress = 'http://localhost:5001';
 
 export const apiBaseUrl = ipAddress;

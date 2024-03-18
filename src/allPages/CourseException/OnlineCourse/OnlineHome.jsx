@@ -16,7 +16,7 @@ const OnlineHome = () => {
         </div>
         {!firstData &&
         <div className='createDiv' >
-            <button className='CreateBtn' onClick={()=>{navigate('/onlineCourse')}} >Create</button>
+            <button className='CreateBtn' onClick={()=>{navigate('/onlineCourseForm')}} >Create</button>
         </div>}
         </div>
         <div className='hometable' >
@@ -28,7 +28,7 @@ const OnlineHome = () => {
                 <h4>Upload Online Course Here</h4>
             </div>
             <div>
-                <div className='card-add-icon' onClick={()=>{navigate('/onlineCourse')}} style={{cursor:'pointer'}}>
+                <div className='card-add-icon' onClick={()=>{navigate('/onlineCourseForm')}} style={{cursor:'pointer'}}>
                         <AddBoxIcon className='add-icon' sx={{ fontSize: 32 }}/>
                 </div>
             </div>

@@ -37,11 +37,11 @@ function AppLayout() {
             <div className="content-with-margin">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
-                <Route path="/onlineCourse" element={<OnlineForm/>}/>
-                <Route path="/onecredit" element={<OneCredit />}/>
+                <Route path="/onlineCourseForm" element={<OnlineForm/>}/>
+                <Route path="/onecreditForm" element={<OneCredit />}/>
                 <Route path="/courseExcp" element={<Home/>}/>
-                <Route path="/OnlineHome" element={<OnlineHome/>}/>
-                <Route path="/CreditHome" element={<CreditHome/>}/>
+                <Route path="/Online Course" element={<OnlineHome/>}/>
+                <Route path="/One Credit" element={<CreditHome/>}/>
               </Routes>
             </div>
           </div>

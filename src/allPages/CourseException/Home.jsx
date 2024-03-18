@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 // import intern from '../../assets/images/Internship.png'
 import Card from './stuffs/Card'
 import axios from 'axios';
-import './styles/home.css'
+import './styles/home.css';
 import { useNavigate } from 'react-router-dom'
 import {apiBaseUrl} from '../../api/api'
 
@@ -13,7 +13,7 @@ const Home = () => {
   const [courseData, setCourseData] = useState([]);
 
   useEffect(() => {
-    axios.get(`${apiBaseUrl}/api/ce/available`)
+    axios.get(`${apiBaseUrl}/api/ce`)
       .then(response => {
         setCourseData(response.data);
       })
@@ -26,10 +26,10 @@ const Home = () => {
     <div>
         <div style={{display:'flex',flexDirection:"row"}}>
             <div className='home' >
-            <div className= 'titleHome' >Seeking for course exemptions and rewards? </div>
+            <div className= 'titleHome' ></div>
             <div className='homeCard' >
             {courseData.map(course => (
-              <div key={course.id} onClick={() => navigate('/OnlineHome')} style={{ cursor: 'pointer' }} >
+              <div key={course.id} onClick={() => navigate(`/${course.name}`)} style={{ cursor: 'pointer' }} >
                 <Card
                   title={course.name}
                   image={`${apiBaseUrl}/${course.image_path}`}

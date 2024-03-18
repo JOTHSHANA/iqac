@@ -3,12 +3,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    /* width: 140vh; */
+    width: 100%; /* Allow horizontal scrolling if needed */
 }
 
 /* Default styles */
 .tableMain {
     overflow-x: auto;
+    width: 100%;
 }
 
