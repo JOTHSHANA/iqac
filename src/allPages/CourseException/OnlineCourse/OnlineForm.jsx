@@ -41,20 +41,22 @@ const OnlineForm = () => {
     const [validWeek,setValidWeek] = useState(null);
     const [validCredit,setValidCredit] = useState(null);
     const [validSemester,setValidSemester] = useState(null);
+    const [excemption,setExcemption] = useState("");
+    const [branch,setBranch] = useState(1);
 
     // Function to fetch users from the API
     const fetchUsers = async () => {
       try {
         // const response = await axios.get('http://localhost:5000/api/users');
-        const type = await axios.get('http://localhost:5000/type');
+        const type = await axios.get('http://localhost:5001/api/ce/oc/platform');
         const weeks = await axios.get('http://localhost:5000/week');
-        const names_api = await axios.get('http://localhost:5000/api/users');
+        // const names_api = await axios.get('http://localhost:5000/api/users');
         const valid = await axios.get('http://localhost:5000/courseExpValidation');
         // If request is successful, set the users state with the fetched data
         // setUsers(response.data);
         setCourseType(type.data);
         setWeekData(weeks.data);
-        setNames(names_api.data);
+        // setNames(names_api.data);
         const {week,credit,semester} = valid.data[0];
         setValidWeek(week);
         setValidCredit(credit);
@@ -112,23 +114,15 @@ const OnlineForm = () => {
     // Function to handle Course Selection 
     const handleCourse = async (course) => {
       if (course) {
-        console.log(course);
         const selectedCourse = course.value;
+        console.log(selectedCourse);
         try {
-          const response = await axios.get(`http://localhost:5000/courseNames/${selectedCourse}`);
-          setCourseNames(response.data);
-        } catch (error) {
-          console.error('Error fetching course names:', error);
-        }
-        // if (selectedCourse === "Others") {
-        //   // Show input field for custom course
-        //   const customCourse = window.prompt("Enter custom course:");
-        //   if (customCourse) {
-        //     setCourse(customCourse);  
-        //   }
-        // }
-        // else 
-        if(selectedCourse>0){
+          const response = await axios.get(`http://localhost:5001/api/ce/oc/platform/excemption?id=${selectedCourse}`);
+          const resp = await axios.get(`http://localhost:5001/api/ce/oc/courselist?platform=${selectedCourse}&branch=${branch}`)
+          const res = response.data[0].excemption;
+          setExcemption(res);
+          setNames(resp.data)
+          if(res === "1"){
             setCreditOpen(true);
             setCourse(course.label);
             setCourseStatus(course.value);
@@ -138,6 +132,10 @@ const OnlineForm = () => {
           setCreditOpen(false);
           setCourseStatus(course.value)
         }
+        } catch (error) {
+          console.error('Error fetching course names:', error);
+        }
+
       } else {
         // Handle case where selectedOption is null (e.g., clearing selection)
         setCourse('');
@@ -228,7 +226,7 @@ const OnlineForm = () => {
   // Function for exception validation
   const handleValidation = () => {
     console.log("function called");
-    if(courseStatus > 0 && ( selectedCredits >= validCredit ) && (selectedSem >= validSemester) && (selectedWeek >= validWeek) ){
+    if(excemption==="1" && ( selectedCredits >= validCredit ) && (selectedSem >= validSemester) && (selectedWeek >= validWeek) ){
       return true;
     }
     else{
@@ -337,18 +335,23 @@ const OnlineForm = () => {
   }))
 
   const CourseList = courseType.map(types => ({
-    value : types.course_id,
-    label : types.type,
+    value : types.id,
+    label : types.name,
   }))
 
   const CourseNameList = names.map(name =>({
-    value : name.courses,
-    label : name.courses,
+    value : name.name,
+    label : name.name,
   }))
 
-  const weekList = weekData.map(week => ({
-    value : week.week,
-    label : week.week,
+  const weekList = names.map(week => ({
+    value : week.duration,
+    label : week.duration,
+  }))
+
+  const CreditsList = names.map(cr => ({
+    value : cr.credit,
+    label : cr.credit,
   }))
 
   const nameList = names.map(nm => ({
@@ -479,6 +482,7 @@ const OnlineForm = () => {
                     isSearchable
                     className='textField'
                     options={CourseNameList}
+                    placeholder=""
                     // options={[
                     //   { value: "REACT JS", label: "REACT JS" },
                     //   { value: "ZEN AI", label: "ZEN AI" },
@@ -497,6 +501,7 @@ const OnlineForm = () => {
                     onChange={handleWeek}
                     className="textField"
                     options={weekList}
+                    placeholder=""
                     // options={[
                     //   { value: "4", label: "4 Weeks" },
                     //   { value: "8", label: "8 Weeks" },
@@ -512,19 +517,9 @@ const OnlineForm = () => {
                 <div className="inp">No.of.Credits</div>
                 <div>
                   <Select
-                    value={{
-                      value: selectedCredits,
-                      label: selectedCredits ? `${selectedCredits}` : "",
-                    }}
                     onChange={handleCredits}
                     className="textField"
-                    options={[
-                      { value: "", label: "" },
-                      { value: 1, label: "1" },
-                      { value: 2, label: "2" },
-                      { value: 3, label: "3" },
-                      { value: 4, label: "4" },
-                    ]}
+                    options={CreditsList}
                     isSearchable={false}
                     placeholder=""
                   />

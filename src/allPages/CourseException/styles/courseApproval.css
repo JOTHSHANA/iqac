@@ -1,0 +1,44 @@
+.titFac{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+.icon{
+    margin-left: 5px;
+    cursor: pointer;
+}
+.iconfilter{
+    background-color: rgb(112, 112, 211);
+    color: white;
+    border-radius: 5px;
+    padding: 2px;
+}
+.dropdown{
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    padding: 10px;
+    padding-left: 15px;
+}
+.drop{
+    display: flex;
+    align-items: flex-end;
+    justify-content: end;
+    margin-right: 30px;
+}
+.ti{
+    margin: 30px;
+    margin-bottom: 0;
+}
+.op1{
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+.op2{
+    cursor: pointer;
+}
+.op1:hover{
+    color:  rgb(112, 112, 211);
+}
+.op2:hover{
+    color:  rgb(112, 112, 211);
+}

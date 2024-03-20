@@ -14,7 +14,7 @@ const OnlineTable = ({ setFirstData }) => {
     // { field: 'student', headerName: 'Student', headerClassName: 'super-app-theme--header' },
     // { field: 'register_number', headerName: 'Register Number', headerClassName: 'super-app-theme--header' },
     // { field: 'year', headerName: 'Year Of Study', headerClassName: 'super-app-theme--header' },
-    { field: 'course_type', headerName: 'Course Type', headerClassName: 'super-app-theme--header', width:100 },
+    { field: 'type', headerName: 'Course Type', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'name_of_course', headerName: 'Course Name', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'semester', headerName: 'Semester', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'start_date', headerName: 'Start Date', headerClassName: 'super-app-theme--header', width:100 },
@@ -127,7 +127,7 @@ const OnlineTable = ({ setFirstData }) => {
           columns={columns}
           localeText={customLocaleText}
           sx={{
-            width: '80%', // Set width to 80%
+            maxWidth: '100%', // Set width to 80%
             overflowX: 'auto', // Enable horizontal scrolling
             '& .super-app-theme--header': {
               color: 'var(--heading-crsExp)',
