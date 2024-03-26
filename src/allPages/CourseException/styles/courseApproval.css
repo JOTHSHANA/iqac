@@ -42,3 +42,9 @@
 .op2:hover{
     color:  rgb(112, 112, 211);
 }
+.titl{
+    margin: 30px;
+    font-size: 16px;
+    text-decoration: underline;
+    padding-bottom: 2px;
+}

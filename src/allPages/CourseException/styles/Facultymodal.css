@@ -1,0 +1,78 @@
+.modal{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    font-family: 'Poppins', sans-serif;
+    color: var(--heading-crsExp);
+}
+.field{
+    display: flex;
+    gap: 20px;
+}
+.fieldbtn{
+    margin-top: 10px;
+    display: flex;
+    gap: 20px;
+}
+.btnApprove{
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 3px;
+    background-color:rgb(62, 62, 230);
+}
+.btnRemove{
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: rgb(250, 41, 41);
+}
+.btnInitiated{
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: rgb(49, 46, 46);
+}
+.rm{
+    font-family: 'Poppins', sans-serif;
+    color: var(--heading-crsExp);
+
+}
+.remarkArea{
+  border: 1px solid transparent;
+  outline: none;
+  border-radius: 4px;
+  padding: 8px;
+  border: 1px solid #ccc; 
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.remarkArea:focus{
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.success{
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+    color: var(--heading-crsExp);
+}
+.tick{
+    margin-top: 5px;
+}
+.remar{
+    color: rgb(250, 41, 41) ;
+}

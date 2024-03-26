@@ -10,10 +10,9 @@ import "../styles/nptel.css"
 import TextField from '@mui/material/TextField';
 
 const OnlineForm = () => {
-
     const [selectedWeek, setSelectedWeek] = useState("");
     const [course,setCourse] = useState('')
-    const [courseStatus,setCourseStatus] = useState("");
+    const [courseStatus,setCourseStatus] = useState(null);
     const [selectedSem,setSelectedSem] = useState('')
     const [student,setStudent] = useState(null);
     const [registerNumber,setRegisterNumber] = useState("");
@@ -23,6 +22,7 @@ const OnlineForm = () => {
     const [examDate,setExamDate] = useState(null);
     const [fmtStartDate,setFmtStartDate] = useState(null);
     const [fmtEndDate,setFmtEndDate] = useState(null);
+    const [fmtExamDate,setFmtExamDate] = useState(null);
     const [numberOfDays, setNumberOfDays] = useState(0);
     const [opinion,setOpinion] = useState(null);
     const [creditOpen,setCreditOpen] = useState(null);
@@ -43,19 +43,15 @@ const OnlineForm = () => {
     const [validSemester,setValidSemester] = useState(null);
     const [excemption,setExcemption] = useState("");
     const [branch,setBranch] = useState(1);
+    const [type,setType] = useState(0);
+    const [selectedPdf,setSelectedPdf] = useState(null)
 
     // Function to fetch users from the API
     const fetchUsers = async () => {
       try {
-        // const response = await axios.get('http://localhost:5000/api/users');
         const type = await axios.get('http://localhost:5001/api/ce/oc/platform');
-        const weeks = await axios.get('http://localhost:5000/week');
-        // const names_api = await axios.get('http://localhost:5000/api/users');
         const valid = await axios.get('http://localhost:5000/courseExpValidation');
-        // If request is successful, set the users state with the fetched data
-        // setUsers(response.data);
         setCourseType(type.data);
-        setWeekData(weeks.data);
         // setNames(names_api.data);
         const {week,credit,semester} = valid.data[0];
         setValidWeek(week);
@@ -198,20 +194,21 @@ const OnlineForm = () => {
     if (date && typeof date === 'object' && date.$isDayjsObject) {
       // Extract the native Date object from the Day.js object
       const nativeDate = date.toDate();
-      console.log("Selected Exam Date:", formatDate(nativeDate));
+      const formatdate = formatDate(nativeDate);
+      setFmtExamDate(formatdate)
     }  
   }
 
-  // Function to format the date as dd/mm/yyyy
   const formatDate = (date) => {
-    return dayjs(date).format('DD/MM/YYYY');
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0'); // January is 0!
+    const dd = String(date.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
   };
-
   // Function to handle selected opinion for Course Exception
   const handleOpinion = (selectedOption) => {
     setOpinion(selectedOption.value);
-
-    if (selectedOption.value === "1") {
+    if (selectedOption.value === 1) {
       setOpenings(true);
     } else {
       setOpenings(false);
@@ -236,7 +233,7 @@ const OnlineForm = () => {
 
   // Function for setting loaded PDF
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    setSelectedPdf(event.target.files[0]);
   }
 
   const handleStudent = (selectedOption) => {
@@ -272,46 +269,52 @@ const OnlineForm = () => {
     console.log(student);
   }
 
-  // const handleSubmit = async () => {
-  //   try {
-  //     const postData = {
-  //       student: student,
-  //       register_number: registerNumber,
-  //       year: year,
-  //       course_type: course,
-  //       name_of_course: crname,
-  //       semester: selectedSem,
-  //       start_date: fmtStartDate,
-  //       end_date: fmtEndDate,
-  //       // certificate_url: certificateUrl
-  //     };
-      
-  //     // Make a POST request to the backend endpoint
-  //     const response = await axios.post('http://localhost:5000/api/addUsers', postData);
+  const handleSubmit1 = async () => {
+    const type = 0;
+    const requestData = {
+        course: parseInt(courseStatus),
+        student: parseInt(student),
+        type: type,
+        start_date: fmtStartDate,
+        end_date: fmtEndDate,
+        exam_date: fmtExamDate,
+        mark: 55,
+        certificate_url: "certificate/url",
+        pdf: selectedPdf
+    };
+    console.log(requestData);
+    try {
+        const response = await axios.post('http://localhost:5001/api/ce/oc/registered', requestData);
 
-  //     // Handle the response as needed
-  //     console.log('Response:', response.data);
-  //   } catch (error) {
-  //     // Handle errors
-  //     console.error('Error:', error);
-  //   }
-  // }; 
+        if (!response.status === 200) {
+            throw new Error('Failed to register online course');
+        }
+
+        console.log('Course registration successful:', response.data.message);
+        // Optionally, handle success response
+    } catch (error) {
+        console.error('Error registering online course:', error.message);
+        // Optionally, display an error message to the user
+    }
+};
+
+
 
   const handleSubmit = async () => {
+    const type = 0;
     if(!course||!crname){
       setError(true)
     }
     console.log(student);
-    console.log(registerNumber);
-    console.log(year);
-    console.log(course);
-    console.log(crname);
-    console.log(selectedSem);
+    console.log(courseStatus);
+    console.log(type);
     console.log(fmtStartDate);
     console.log(fmtEndDate);
+    console.log(fmtExamDate);
+    console.log(55);
+    console.log("certificate/url");
+    console.log(selectedPdf);
   }
-
-
 
   // Functions for mapping the data from api to the select component
   const selectOptions = users.map(user => ({
@@ -373,9 +376,11 @@ const OnlineForm = () => {
                 <div>
                   <Select
                     className='textField'
-                    options={nameList}
+                    options={[
+                        { value: 1 , label: "Gautham" },
+                       ]}
                     onChange={handleStudent}
-                    isSearchable
+                    isSearchable    
                     styles={{
                       control: (baseStyles, state) => ({
                         ...baseStyles,
@@ -462,12 +467,6 @@ const OnlineForm = () => {
                         borderColor: error && (!course) ? 'red' : '#cccdce',
                       }),
                     }}
-                    // options={[
-                    //   { value: "NPTEL", label: "NPTEL" },
-                    //   { value: "COURSERA", label: "Coursera" },
-                    //   { value: "UDEMY", label: "Udemy" },
-                    //   { value: "Others", label: "Others" },
-                    // ]}
                   />
                   {error && (!course) && <div className="errorText">Select course type</div>}
                   {/* {course && <div> Course : {course} </div>} */}
@@ -483,12 +482,6 @@ const OnlineForm = () => {
                     className='textField'
                     options={CourseNameList}
                     placeholder=""
-                    // options={[
-                    //   { value: "REACT JS", label: "REACT JS" },
-                    //   { value: "ZEN AI", label: "ZEN AI" },
-                    //   { value: "META UI", label: "META UI" },
-                    //   { value: "CLOUD", label: "CLOUD" },
-                    // ]}
                   />
                 </div>
               </div>
@@ -502,11 +495,6 @@ const OnlineForm = () => {
                     className="textField"
                     options={weekList}
                     placeholder=""
-                    // options={[
-                    //   { value: "4", label: "4 Weeks" },
-                    //   { value: "8", label: "8 Weeks" },
-                    //   { value: "12", label: "12 Weeks" },
-                    // ]}
                     isSearchable={false}
                    
                   />
@@ -584,14 +572,14 @@ const OnlineForm = () => {
                       value={{
                         value: opinion,
                         label:
-                          opinion === "1" ? "Yes" : opinion === "0" ? "No" : "",
+                          opinion === 1 ? "Yes" : opinion === 0 ? "No" : "",
                       }}
                       onChange={handleOpinion}
                       className="textField"
                       options={[
                         { value: "", label: "" },
-                        { value: "1", label: "Yes" },
-                        { value: "0", label: "No" },
+                        { value: 1, label: "Yes" },
+                        { value: 0, label: "No" },
                       ]}
                       placeholder=""
                     />
@@ -601,6 +589,9 @@ const OnlineForm = () => {
                 </div>
                 </div>
 
+              <div>
+              {/* {openings && handleValidation() ? ( setType(1) ) : ( setType(0) )} */}
+              </div>
               {openings && handleValidation() ? (
                 <div>
                 <div className='titdefault' ><h4>Apply For Course Exception</h4></div>
@@ -694,15 +685,16 @@ const OnlineForm = () => {
                         <input
                           id="pdf-upload"
                           type="file"
-                          accept=".pdf"
+                          required 
+                          accept="application/pdf"
                           onChange={handleFileChange}
                           style={{ display: "none" }}
                         />
                       </label>
                       <div style={{ margin: "5px" , marginRight:"50px" }}>
                         {" "}
-                        {selectedFile && (
-                          <p>Selected file: {selectedFile.name}</p>
+                        {selectedPdf && (
+                          <p>Selected file: {selectedPdf.name}</p>
                         )}{" "}
                       </div>
                     </div>
@@ -715,7 +707,7 @@ const OnlineForm = () => {
                   </div> */}
                   <div className="RPsubmits">
                     <button className="expCancelBtn">Cancel</button>
-                    <button className="expCreateBtn" onClick={handleSubmit} >Create</button>
+                    <button className="expCreateBtn" onClick={handleSubmit1} >Create</button>
                   </div>
                 </div>
                 </div>

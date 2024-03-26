@@ -14,16 +14,17 @@ const OnlineTable = ({ setFirstData }) => {
     // { field: 'student', headerName: 'Student', headerClassName: 'super-app-theme--header' },
     // { field: 'register_number', headerName: 'Register Number', headerClassName: 'super-app-theme--header' },
     // { field: 'year', headerName: 'Year Of Study', headerClassName: 'super-app-theme--header' },
-    { field: 'type', headerName: 'Course Type', headerClassName: 'super-app-theme--header', width:100 },
+    { field: 'course_type', headerName: 'Course Type', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'name_of_course', headerName: 'Course Name', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'semester', headerName: 'Semester', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'start_date', headerName: 'Start Date', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'end_date', headerName: 'End Date', headerClassName: 'super-app-theme--header', width:100 },
-    { field: 'certificate_url', headerName: 'Certificate URL', headerClassName: 'super-app-theme--header' , width:100},
+    { field: 'certificate_url', headerName: 'Certificate URL', headerClassName: 'super-app-theme--header' , width:160},
     {
       field: 'view',
       headerName: 'View',
       headerClassName: 'super-app-theme--header',
+      width:50,
       renderCell: (params) => (
         <Box style={{ cursor: 'pointer' }} onClick={() => setSelectedRowData(params.row)} >
           <RemoveRedEyeOutlinedIcon />
@@ -148,7 +149,6 @@ const OnlineTable = ({ setFirstData }) => {
             },
           }}
           pageSizeOptions={[5]}
-          checkboxSelection
           disableRowSelectionOnClick
         />
       </div>

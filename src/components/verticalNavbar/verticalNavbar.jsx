@@ -21,6 +21,12 @@ function VerticalNavbar({ onClose }) {
             <div className={`menu-item ${activeLink === '/courseApproval' ? 'active' : ''}`} onClick={() => handleLinkClick('/courseApproval')}>
                 <Link to="/courseApproval" className="link-style"><DashboardRoundedIcon className='nav-icons' />Course Approval</Link>
             </div>
+            <div className={`menu-item ${activeLink === '/OnlineReports' ? 'active' : ''}`} onClick={() => handleLinkClick('/OnlineReports')}>
+                <Link to="/OnlineReports" className="link-style"><DashboardRoundedIcon className='nav-icons' />Online Approved</Link>
+            </div>
+            <div className={`menu-item ${activeLink === '/OnlineRejected' ? 'active' : ''}`} onClick={() => handleLinkClick('/OnlineRejected')}>
+                <Link to="/OnlineRejected" className="link-style"><DashboardRoundedIcon className='nav-icons' />Online Rejected</Link>
+            </div>
         </div>
     );
 }
