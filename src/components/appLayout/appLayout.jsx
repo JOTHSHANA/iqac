@@ -13,6 +13,7 @@ import CreditHome from "../../allPages/CourseException/OneCredit/CreditHome"
 import CourseApproval from "../../allPages/CourseException/OnlineCourse/CourseApproval";
 import OnlineReports from "../../allPages/CourseException/OnlineCourse/OnlineReports";
 import OnlineRejected from "../../allPages/CourseException/OnlineCourse/OnlineRejected";
+import Internship from "../../allPages/CourseException/InternShip/Internship";
 
 
 function AppLayout() {
@@ -48,6 +49,7 @@ function AppLayout() {
                 <Route path="/courseApproval" element={<CourseApproval/>}/>
                 <Route path="/OnlineReports" element={<OnlineReports/>}/>
                 <Route path="/OnlineRejected" element={<OnlineRejected/>}/> 
+                <Route path="/Internship" element={<Internship/>}/>
               </Routes>
             </div>
           </div>

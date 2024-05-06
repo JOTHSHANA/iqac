@@ -76,3 +76,52 @@
 .remar{
     color: rgb(250, 41, 41) ;
 }
+.pdficon{
+    display: flex;
+    gap: 5px;
+    cursor: pointer;
+    color: blue;
+}
+
+.conformBtnApprove{
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 3px;
+    background-color:rgb(62, 62, 230);
+}
+
+.conformBtnRemove{
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    border-radius: 3px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    background-color: rgb(250, 41, 41);
+}
+
+.btnDisable{
+    font-family: 'Poppins', sans-serif;
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    color: white;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 3px;
+    background-color:rgb(62, 62, 230);
+}
+
+.cross{
+    display: flex;
+    flex-direction: row-reverse;
+    font-family: 'Poppins', sans-serif;
+}

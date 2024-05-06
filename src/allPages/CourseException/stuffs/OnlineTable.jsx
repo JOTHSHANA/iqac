@@ -6,6 +6,7 @@ import '../styles/table.css';
 import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 
 const OnlineTable = ({ setFirstData }) => {
+  const [student,setStudent] = useState(1);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
   const [selectedRowData, setSelectedRowData] = useState(null);
@@ -14,11 +15,22 @@ const OnlineTable = ({ setFirstData }) => {
     // { field: 'student', headerName: 'Student', headerClassName: 'super-app-theme--header' },
     // { field: 'register_number', headerName: 'Register Number', headerClassName: 'super-app-theme--header' },
     // { field: 'year', headerName: 'Year Of Study', headerClassName: 'super-app-theme--header' },
-    { field: 'course_type', headerName: 'Course Type', headerClassName: 'super-app-theme--header', width:100 },
-    { field: 'name_of_course', headerName: 'Course Name', headerClassName: 'super-app-theme--header', width:100 },
-    { field: 'semester', headerName: 'Semester', headerClassName: 'super-app-theme--header', width:100 },
+    { field: 'platform_name', headerName: 'Course Type', headerClassName: 'super-app-theme--header' },
+    { field: 'course_name', headerName: 'Course Name', headerClassName: 'super-app-theme--header', width:150 },
+    { field: 'semester', headerName: 'Semester', headerClassName: 'super-app-theme--header'},
     { field: 'start_date', headerName: 'Start Date', headerClassName: 'super-app-theme--header', width:100 },
     { field: 'end_date', headerName: 'End Date', headerClassName: 'super-app-theme--header', width:100 },
+    {field: 'type', headerName: 'Applied For',headerClassName: 'super-app-theme--header', width:100,
+    renderCell: (params) => (
+      <Box>
+        {params.value === "1"
+            ? 'Exemption'
+            : params.value === "0"
+            ? 'Rewards'
+            : 'Unknown'}
+      </Box>
+    ),
+  },
     { field: 'certificate_url', headerName: 'Certificate URL', headerClassName: 'super-app-theme--header' , width:160},
     {
       field: 'view',
@@ -32,7 +44,7 @@ const OnlineTable = ({ setFirstData }) => {
       ),
     },
     {
-      field: 'status',
+      field: 'approval_status',
       headerName: 'Status',
       headerClassName: 'super-app-theme--header',
       renderCell: (params) => (
@@ -70,7 +82,7 @@ const OnlineTable = ({ setFirstData }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5000/rpStudents');
+        const response = await fetch(`http://localhost:5001/api/ce/oc/registered?student=${student}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

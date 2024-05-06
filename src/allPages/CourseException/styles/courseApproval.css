@@ -9,7 +9,7 @@
 }
 .iconfilter{
     background-color: rgb(112, 112, 211);
-    color: white;
+    color: #ecf5fa;
     border-radius: 5px;
     padding: 2px;
 }
@@ -47,4 +47,7 @@
     font-size: 16px;
     text-decoration: underline;
     padding-bottom: 2px;
+}
+.pendingTable{
+    width: 173vh;
 }

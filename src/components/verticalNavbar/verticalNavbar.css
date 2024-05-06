@@ -2,9 +2,11 @@
     height: fit-content;
     width: 200px;
     padding: 15px;
-    display: flex;
+    padding-left: 8px;
+    display: block;
+    /* display: flex;
     align-items: center;
-    flex-direction: column;
+    flex-direction: column; */
     /* position: relative; */
     /* z-index: 5000; */
 }
@@ -45,7 +47,6 @@
     display: flex;
     width: 100%;
     align-items: center;
-    color: var(--text-black);
     padding: 8px;
     
 }
@@ -68,4 +69,33 @@
     background-color: var(--icon-hover-backgrd);
     color: var(--background-2);
     border-radius: 5px;
+}
+
+.options {
+    transition:all 2s ease;
+}
+
+.menu-items{
+    color: var(--text-black);
+    font-size: 15px;
+    border-radius: 5px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    transition: all 0.2s;
+    cursor: pointer;
+    margin: 2px;
+}
+
+.menu-items:hover {
+    background-color: var(--card-2);
+    color: var(--button);
+}
+
+.groups{
+    color: var(--text-black);
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
 }

@@ -3,6 +3,7 @@
     flex-direction: row;
     margin: 20px;
     gap: 50px;
+    height: 350px;
 }
 .titleHome{
     color: var(--heading-crsExp);
@@ -34,5 +35,16 @@
     border: 1px solid  white;
     background-color: var(--card-2);
     box-shadow: 2px 2px 2px 2px lightgray;
+    border-radius: 10px;
+}
+.doughnut{
+    height: 180px;
+}
+
+.content-container {
+    margin: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    overflow-y: scroll;
     border-radius: 10px;
 }

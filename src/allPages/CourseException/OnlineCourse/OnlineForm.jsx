@@ -7,14 +7,44 @@ import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import Select from 'react-select'
 import "../styles/nptel.css"
-import TextField from '@mui/material/TextField';
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+import { Navigate, useNavigate } from 'react-router-dom';
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 330,
+  bgcolor: 'background.paper',
+  borderRadius:'10px',
+  boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
+  p: 4,
+};
+
+const style1 = {
+  position: 'absolute',
+  top: '5%',
+  left: '50%',
+  bottom:'90%',
+  transform: 'translate(-50%, -50%)',
+  width: 280,
+  bgcolor: 'background.paper',
+  boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
+  borderRadius:'10px',
+  p: 4,
+};
 
 const OnlineForm = () => {
-    const [selectedWeek, setSelectedWeek] = useState("");
+    const navigate = useNavigate()
+    const [selectedWeek, setSelectedWeek] = useState(null);
     const [course,setCourse] = useState('')
     const [courseStatus,setCourseStatus] = useState(null);
     const [selectedSem,setSelectedSem] = useState('')
-    const [student,setStudent] = useState(null);
+    const [student,setStudent] = useState(1);
     const [registerNumber,setRegisterNumber] = useState("");
     const [error,setError] = useState(false)
     const [startDate, setStartDate] = useState(null);
@@ -37,21 +67,37 @@ const OnlineForm = () => {
     const [lab,setLab] = useState(null);
     const [year,setYear] = useState(null);
     const [crname,setCrname] = useState(null);
-    const [certificateUrl,setCertificateUrl] = useState(null);
+    const [certificateUrlExp,setCertificateUrlExp] = useState("");
+    const [certificateUrlRp,setCertificateUrlRp] = useState("");
     const [validWeek,setValidWeek] = useState(null);
     const [validCredit,setValidCredit] = useState(null);
     const [validSemester,setValidSemester] = useState(null);
     const [excemption,setExcemption] = useState("");
     const [branch,setBranch] = useState(1);
     const [type,setType] = useState(0);
-    const [selectedPdf,setSelectedPdf] = useState(null)
+    const [selectedPdfExp,setSelectedPdfExp] = useState(null)
+    const [selectedPdfRp,setSelectedPdfRp] = useState(null)
+    const [reportPdf,setReportPdf] = useState(null);
+    const [weekList,setWeekList] = useState([]);
+    const [creditList,setCreditList] = useState([]);
+    const [marks,setMarks] = useState(null);
+    const [reasonOpen,setReasonOpen] = useState(false);
+    const [dataRespModal,setDataRespModal] = useState(false);
+    const [isSuccess,setIsSuccess] = useState(null);
+    const [responseMessage,setResponseMessage] = useState("");
+    const [approvalStatusFromDb,setApprovalStatusFromDb] = useState([]);
+    const [approvedStatus,setApprovedStatus] = useState(false);
+    const [pendingStatus,setPendingStatus] = useState(false)
+    const [restrictModal,setRestrictModal] = useState(false);
 
     // Function to fetch users from the API
     const fetchUsers = async () => {
       try {
         const type = await axios.get('http://localhost:5001/api/ce/oc/platform');
-        const valid = await axios.get('http://localhost:5000/courseExpValidation');
+        const valid = await axios.get('http://localhost:5001/api/ce/oc/courseExpValidation');
+        const decision_status = await axios.get(`http://localhost:5001/api/ce/oc/OnlineApprovedStatus?student=${student}`)
         setCourseType(type.data);
+        setApprovalStatusFromDb(decision_status.data);
         // setNames(names_api.data);
         const {week,credit,semester} = valid.data[0];
         setValidWeek(week);
@@ -68,7 +114,7 @@ const OnlineForm = () => {
       const loadPdf = async () => {
         const response = await fetch(pdf);
         const pdfBlob = await response.blob();
-        setSelectedFile(pdfBlob);
+        setReportPdf(pdfBlob);
       };
       loadPdf();
       fetchUsers();
@@ -76,11 +122,11 @@ const OnlineForm = () => {
 
     //function to trigger the pdf download
     const modifyPdf = async () => {
-      if (!selectedFile) {
+      if (!reportPdf) {
         alert('Failed to load PDF');
         return;
       }
-      const existingPdfBytes = await selectedFile.arrayBuffer();
+      const existingPdfBytes = await reportPdf.arrayBuffer();
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       const timesNewRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
       const pages = pdfDoc.getPages();
@@ -112,9 +158,10 @@ const OnlineForm = () => {
       if (course) {
         const selectedCourse = course.value;
         console.log(selectedCourse);
+        console.log(approvalStatusFromDb);
         try {
           const response = await axios.get(`http://localhost:5001/api/ce/oc/platform/excemption?id=${selectedCourse}`);
-          const resp = await axios.get(`http://localhost:5001/api/ce/oc/courselist?platform=${selectedCourse}&branch=${branch}`)
+          const resp = await axios.get(`http://localhost:5001/api/ce/oc/courselist?platform=${selectedCourse}&branch=${branch}&student=${student}`)
           const res = response.data[0].excemption;
           setExcemption(res);
           setNames(resp.data)
@@ -142,7 +189,7 @@ const OnlineForm = () => {
   // function to handle semester Selection
   const handleSem = (selectedOption) => {
     setSelectedSem(selectedOption.value);
-  };
+  }
 
   // Function to handle Start Date
   const handleStartDateChange = (date) => {
@@ -161,10 +208,11 @@ const OnlineForm = () => {
     if (date && typeof date === 'object' && date.$isDayjsObject) {
         const nativeDate = date.toDate();
         const formatdate = formatDate(nativeDate);
+        console.log(formatdate);
         setFmtStartDate(formatdate)
     }
     }
-  };
+  }
 
   // Function to handle End Date
   const handleEndDateChange = (date) => {
@@ -184,20 +232,37 @@ const OnlineForm = () => {
         // Extract the native Date object from the Day.js object
         const nativeDate = date.toDate();
         const formatdate = formatDate(nativeDate);
+        console.log(formatdate);
         setFmtEndDate(formatdate)
       }      
     }
   };
 
   const handleExamDate = (date) => {
-    setExamDate(date)
-    if (date && typeof date === 'object' && date.$isDayjsObject) {
-      // Extract the native Date object from the Day.js object
-      const nativeDate = date.toDate();
-      const formatdate = formatDate(nativeDate);
-      setFmtExamDate(formatdate)
-    }  
-  }
+    // Check if start date is selected
+    if (!startDate) {
+        alert("Please select the start date first.");
+        return; // Exit the function if start date is not selected
+    }
+
+    // Check if exam date is before start date
+    if (date && date.isBefore(startDate, 'day')) {
+        // If exam date is before start date, show error message
+        alert("Exam date cannot be before the start date. Please select a valid exam date.");
+        setExamDate(null); // Reset exam date
+    } else {
+        // Set the exam date
+        setExamDate(date);
+
+        // Format the exam date if it's a Day.js object
+        if (date && typeof date === 'object' && date.$isDayjsObject) {
+            const nativeDate = date.toDate();
+            const formatdate = formatDate(nativeDate);
+            setFmtExamDate(formatdate);
+        }
+    }
+}
+
 
   const formatDate = (date) => {
     const yyyy = date.getFullYear();
@@ -223,7 +288,10 @@ const OnlineForm = () => {
   // Function for exception validation
   const handleValidation = () => {
     console.log("function called");
-    if(excemption==="1" && ( selectedCredits >= validCredit ) && (selectedSem >= validSemester) && (selectedWeek >= validWeek) ){
+    // if((excemption && selectedCredits && selectedSem && selectedWeek)&&(excemption !="1" && ( selectedCredits < validCredit ) && (selectedSem < validSemester) && (selectedWeek < validWeek))){
+    //   setGiveAlert(true);
+    // }
+    if(excemption==="1" && ( selectedCredits >= validCredit ) && (selectedSem >= validSemester) && (selectedWeek >= validWeek) && (!(restrictingUser()))){
       return true;
     }
     else{
@@ -231,9 +299,48 @@ const OnlineForm = () => {
     }
   }
 
+  const alertingUser = () => {
+    if((excemption && selectedCredits && selectedSem && selectedWeek)&&(excemption !="1" || ( selectedCredits < validCredit ) || (selectedSem < validSemester) || (selectedWeek < validWeek))){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  const restrictingUser = () => {
+    if((excemption && selectedCredits && selectedSem && selectedWeek)){
+      const len = approvalStatusFromDb.length;
+      // if(len==0){
+      //   return false;
+      // }
+      // else if(len==2){
+      //   if((approvalStatusFromDb[0].approval_status==1)&&(approvalStatusFromDb[1].approval_status==1)){
+      //     return true;
+      //   }
+      //   else{
+      //     return false;
+      //   }
+      // }
+      // else if(len>2){
+      //   return true;
+      // }
+      if(len<2){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }
+  }
+
   // Function for setting loaded PDF
-  const handleFileChange = (event) => {
-    setSelectedPdf(event.target.files[0]);
+  const handleFileChangeExp = (event) => {
+    setSelectedPdfExp(event.target.files[0]);
+  }
+
+  const handleFileChangeRp = (event) => {
+    setSelectedPdfRp(event.target.files[0]);
   }
 
   const handleStudent = (selectedOption) => {
@@ -247,16 +354,46 @@ const OnlineForm = () => {
 
   const handleCourseName = (crname) => {
     setCrname(crname.value);
-    console.log(course);
+    const selectedCourse = names.find(course => course.id === crname.value);
+    const duration_info = [
+      { value: selectedCourse.duration,
+        label: `${selectedCourse.duration} Weeks` },
+    ]
+    const credit_info = [
+      {
+        value: selectedCourse.credit,
+        label: `${selectedCourse.credit} Credits`
+      }
+    ]
+    setWeekList(duration_info);
+    setCreditList(credit_info);
+    setSelectedWeek(duration_info[0].value);
+    setSelectedCredits(credit_info[0].value);
+    console.log(duration_info[0].value, credit_info[0].value);
   }
+
+  const handleMarksChange = (e) => {
+    const input = e.target.value;
+    if (!input || /^\d+$/.test(input)) {
+      setMarks(input);
+    }
+    console.log(marks);
+  };
 
   const handleLab = (lab) => {
     setLab(lab.value)
     console.log(certificateUrl);
   }
 
-  const handleCerfUrl = (value) =>{
-    setCertificateUrl(value)
+  const handleCerfUrlExp = (event) =>{
+    setCertificateUrlExp(event.target.value)
+    console.log(event.target.value);
+    console.log(marks);
+  }
+
+  const handleCerfUrlRp = (event) =>{
+    setCertificateUrlRp(event.target.value)
+    console.log(event.target.value);
   }
 
   const handleYear = (year) => {
@@ -269,52 +406,138 @@ const OnlineForm = () => {
     console.log(student);
   }
 
-  const handleSubmit1 = async () => {
-    const type = 0;
-    const requestData = {
-        course: parseInt(courseStatus),
-        student: parseInt(student),
-        type: type,
-        start_date: fmtStartDate,
-        end_date: fmtEndDate,
-        exam_date: fmtExamDate,
-        mark: 55,
-        certificate_url: "certificate/url",
-        pdf: selectedPdf
-    };
-    console.log(requestData);
+  const sendDataToBackendRp = async () => {
     try {
-        const response = await axios.post('http://localhost:5001/api/ce/oc/registered', requestData);
+      if(!student||!crname||!selectedSem||!fmtStartDate||!fmtEndDate||!fmtExamDate||!marks||!certificateUrlRp||!selectedPdfRp){
+        alert("Fill out all the Fields");
+      }
+      else{
+        const formData = new FormData();
+        const type = 0;
+        const approval_status=0;
+        const mentor_code = "22IT137";
+        formData.append('course', crname);
+        formData.append('student', student);
+        formData.append('type', type);
+        formData.append('semester', selectedSem);
+        formData.append('start_date', fmtStartDate);
+        formData.append('end_date', fmtEndDate);
+        formData.append('exam_date', fmtExamDate);
+        formData.append('mark', marks);
+        formData.append('certificate_url', certificateUrlRp);
+        formData.append('certificateFile', selectedPdfRp);
+        formData.append('approval_status', approval_status);
+        formData.append('mentor_code', mentor_code);
 
-        if (!response.status === 200) {
-            throw new Error('Failed to register online course');
+        console.log(formData);
+  
+        const response = await axios.post('http://localhost:5001/api/ce/oc/onlineApply/create', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+        });
+  
+        console.log('Response:', response.data);
+        if (response.status === 200) {
+          console.log('Data successfully sent to the backend');
+          setDataRespModal(true);
+          setIsSuccess(true);
+          setResponseMessage("Online Course Applied Successfully");
         }
-
-        console.log('Course registration successful:', response.data.message);
-        // Optionally, handle success response
+      }
     } catch (error) {
-        console.error('Error registering online course:', error.message);
-        // Optionally, display an error message to the user
+      console.error('Error sending data to the backend:', error);
+      setDataRespModal(true);
+      setIsSuccess(false);
+      setResponseMessage("Error While Applying the online course..Retry it!")
     }
-};
-
-
-
-  const handleSubmit = async () => {
-    const type = 0;
-    if(!course||!crname){
-      setError(true)
-    }
-    console.log(student);
-    console.log(courseStatus);
-    console.log(type);
-    console.log(fmtStartDate);
-    console.log(fmtEndDate);
-    console.log(fmtExamDate);
-    console.log(55);
-    console.log("certificate/url");
-    console.log(selectedPdf);
   }
+
+  const sendDataToBackendExp = async () => {
+    try {
+      if(!student||!crname||!selectedSem||!fmtStartDate||!fmtEndDate||!fmtExamDate||!marks||!certificateUrlExp||!selectedPdfExp){
+        alert("Fill out all the Fields");
+      }
+      else{
+        const formData = new FormData();
+        const type = 1;
+        const approval_status=0;
+        const mentor_code = "22IT137";
+        formData.append('course', crname);
+        formData.append('student', student);
+        formData.append('type', type);
+        formData.append('semester', selectedSem);
+        formData.append('start_date', fmtStartDate);
+        formData.append('end_date', fmtEndDate);
+        formData.append('exam_date', fmtExamDate);
+        formData.append('mark', marks);
+        formData.append('certificate_url', certificateUrlExp);
+        formData.append('certificateFile', selectedPdfExp);
+        formData.append('approval_status', approval_status);
+        formData.append('mentor_code', mentor_code);
+
+        console.log(formData);
+  
+        const response = await axios.post('http://localhost:5001/api/ce/oc/onlineApply/create', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+        });
+  
+        console.log('Response:', response.data);
+        if (response.status === 200) {
+          console.log('Data successfully sent to the backend');
+          setDataRespModal(true);
+          setIsSuccess(true);
+          setResponseMessage("Online Course Applied Successfully");
+          modifyPdf();
+        }
+      }
+    } catch (error) {
+      console.error('Error sending data to the backend:', error);
+      setDataRespModal(true);
+      setIsSuccess(false);
+      setResponseMessage("Error While Applying the online course..Retry it!")
+    }
+
+  }
+
+  const handleInputKeyDown = (event) => {
+    // Allow only numeric keys and certain special keys
+    if (
+      !(
+        // Allow numeric keys
+        (event.keyCode >= 48 && event.keyCode <= 57) || // 0-9 (top row)
+        (event.keyCode >= 96 && event.keyCode <= 105) || // 0-9 (numpad)
+        // Allow special keys: backspace, delete, arrow keys, tab, home, end
+        [8, 46, 37, 39, 9, 36, 35].includes(event.keyCode)
+      )
+    ) {
+      // Prevent the default action for non-numeric keys
+      event.preventDefault();
+    }
+  };
+
+  const handleRespModalClose = () => {
+    setDataRespModal(false);
+    {isSuccess? navigate('/courseExcp'): navigate('/Online Course')}
+  }
+
+  const handleRestrict = () => {
+    if((approvalStatusFromDb[0].approval_status==1)&&(approvalStatusFromDb[0].approval_status==1)){
+      setApprovedStatus(true);
+    }
+    else{
+      setApprovedStatus(false);
+    }
+    setRestrictModal(true);
+  }
+
+
+
+  // useEffect(() => {
+  //   console.log(marks);
+  // }, [marks]);
 
   // Functions for mapping the data from api to the select component
   const selectOptions = users.map(user => ({
@@ -343,19 +566,19 @@ const OnlineForm = () => {
   }))
 
   const CourseNameList = names.map(name =>({
-    value : name.name,
+    value : name.id,
     label : name.name,
   }))
 
-  const weekList = names.map(week => ({
-    value : week.duration,
-    label : week.duration,
-  }))
+  // const weekList = names.map(week => ({
+  //   value : week.duration,
+  //   label : week.duration,
+  // }))
 
-  const CreditsList = names.map(cr => ({
-    value : cr.credit,
-    label : cr.credit,
-  }))
+  // const CreditsList = names.map(cr => ({
+  //   value : cr.credit,
+  //   label : cr.credit,
+  // }))
 
   const nameList = names.map(nm => ({
     value : nm.name,
@@ -364,359 +587,434 @@ const OnlineForm = () => {
 
   
   return (
-    <div className='frm'>
-        <div>
-          <div className="nptelTextFields">
-            <div>
-            <div className='titdefault' ><h4>Default Details</h4></div>
-            <div className='Default' >
-            <div className='dfinside'>
-              <div className="quesField">
-                <div className="inp">Student</div>
-                <div>
-                  <Select
-                    className='textField'
-                    options={[
-                        { value: 1 , label: "Gautham" },
-                       ]}
-                    onChange={handleStudent}
-                    isSearchable    
-                    styles={{
-                      control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        borderColor: error && (!student) ? 'red' : '#cccdce',
-                      }),
-                    }}
-                    placeholder=""
-                  ></Select>
-                  {error && (!student) && <div className="errorText">Student is mandatory</div>}
-                </div>
-              </div>
-              <div className="quesField">
-                <div className="inp">Register Number</div>
-                <div>
-                  <Select
-                    className='textField'
-                    options={rollnumber}
-                    onChange={handleRegisterNumber}
-                    isSearchable
-                    placeholder=""
-                    styles={{
-                      control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        borderColor: error && (!registerNumber) ? 'red' : '#cccdce',
-                      }),
-                    }}
-                  ></Select>
-                  {error && (!registerNumber) && <div className="errorText">Please Enter Your Register Number</div>}
-                </div>
-              </div>
-              <div className="quesField">
-                <div className="inp">Year Of Study</div>
-                <div>
-                  <Select
-                    className="textField"
-                    options={years}
-                    onChange={handleYear}
-                    isSearchable
-                    styles={{
-                      control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        borderColor: error && (!year) ? 'red' : '#cccdce',
-                      }),
-                    }}
-                    placeholder=""
-                  ></Select>
-                </div>
-              </div>
-              <div className="quesField"  >
-                <div className="inp">Special Lab</div>
-                <div>
-                  <Select
-                    className="textField"
-                    options={labList}
-                    onChange={handleLab}
-                    styles={{
-                      control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        borderColor: error && (!lab) ? 'red' : '#cccdce',
-                      }),
-                    }}
-                    isSearchable
-                    placeholder=""
-                  ></Select>
-                </div>
-              </div>
-              </div>
+    <div className="frm">
+      <div>
+        <div className="nptelTextFields">
+          <div>
+            <div className="titdefault">
+              <h4>Default Details</h4>
             </div>
-              <div className='titdefault' ><h4>Course Details</h4></div>
-              <div className='Default' >
-              <div className='dfinside' >
-              <div className="quesField">
-                <div className="inp">Course Type</div>
-                <div>
-                  <Select
-                    onChange={handleCourse}
-                    placeholder=""
-                    isSearchable
-                    className='textField'
-                    options={CourseList}
-                    styles={{
-                      control: (baseStyles, state) => ({
-                        ...baseStyles,
-                        borderColor: error && (!course) ? 'red' : '#cccdce',
-                      }),
-                    }}
-                  />
-                  {error && (!course) && <div className="errorText">Select course type</div>}
-                  {/* {course && <div> Course : {course} </div>} */}
-                </div>
-              </div>
-              <div className="quesField">
-                <div className="inp">Name of the Course</div>
-                <div>
-                  <Select
-                    // value={{ value: crname, label: crname }}
-                    onChange={handleCourseName}
-                    isSearchable
-                    className='textField'
-                    options={CourseNameList}
-                    placeholder=""
-                  />
-                </div>
-              </div>
-              {creditOpen ? 
-              <>
-              <div className="quesField">
-                <div className="inp">Duration in Weeks</div>
-                <div>
-                  <Select
-                    onChange={handleWeek}
-                    className="textField"
-                    options={weekList}
-                    placeholder=""
-                    isSearchable={false}
-                   
-                  />
-                  {/* {selectedWeek && <div> Weeks : {selectedWeek} </div>} */}
-                </div>
-              </div>
-              <div className="quesField">
-                <div className="inp">No.of.Credits</div>
-                <div>
-                  <Select
-                    onChange={handleCredits}
-                    className="textField"
-                    options={CreditsList}
-                    isSearchable={false}
-                    placeholder=""
-                  />
-                  {/* {selectedCredits && <div> Credits : {selectedCredits} </div>} */}
-                </div>
-              </div> </> : null }
-              <div className="quesField">
-                <div className="inp">Semester</div>
-                <div>
-                  <Select
-                    value={{
-                      value: selectedSem,
-                      label: selectedSem ? `Semester ${selectedSem}` : "",
-                    }}
-                    onChange={handleSem}
-                    className="textField"
-                    options={[
-                      { value: "", label: "" },
-                      { value: 1, label: "I" },
-                      { value: 2, label: "II" },
-                      { value: 3, label: "III" },
-                      { value: 4, label: "IV" },
-                      { value: 5, label: "V" },
-                      { value: 6, label: "VI" },
-                      { value: 7, label: "VII" },
-                      { value: 8, label: "VIII" },
-                    ]}
-                    isSearchable={false}
-                    placeholder=""
-                  />
-                  {/* {selectedSem && <div> Semester : {selectedSem} </div>} */}
-                </div>
-              </div>
-              <div className="quesField">
-                <div className="inp">Start Date</div>
-                <div>
-                  <DatePicker
-                    className="textField"
-                    value={startDate}
-                    onChange={handleStartDateChange}
-                  />
-                </div>
-              </div>
-              <div className="quesField">
-                <div className="inp">End Date</div>
-                <div>
-                  <DatePicker
-                    className="textField"
-                    value={endDate}
-                    onChange={handleEndDateChange}
-                  />
-                  {/* {startDate && endDate && (
-                    <p>Number of days between selected dates: {numberOfDays}</p>
-                  )} */}
-                </div>
-              </div>
-              {handleValidation() ? (
+            <div className="Default">
+              <div className="dfinside">
                 <div className="quesField">
-                  <div className="inp">Do You Want Course Exception</div>
+                  <div className="inp">Student</div>
                   <div>
                     <Select
-                      value={{
-                        value: opinion,
-                        label:
-                          opinion === 1 ? "Yes" : opinion === 0 ? "No" : "",
-                      }}
-                      onChange={handleOpinion}
                       className="textField"
-                      options={[
-                        { value: "", label: "" },
-                        { value: 1, label: "Yes" },
-                        { value: 0, label: "No" },
-                      ]}
+                      options={[{ value: 1, label: "Gautham" }]}
+                      onChange={handleStudent}
+                      isSearchable
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          borderColor: error && !student ? "red" : "#cccdce",
+                        }),
+                      }}
+                      placeholder=""
+                    ></Select>
+                    {error && !student && (
+                      <div className="errorText">Student is mandatory</div>
+                    )}
+                  </div>
+                </div>
+                <div className="quesField">
+                  <div className="inp">Register Number</div>
+                  <div>
+                    <Select
+                      className="textField"
+                      options={rollnumber}
+                      onChange={handleRegisterNumber}
+                      isSearchable
+                      placeholder=""
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          borderColor:
+                            error && !registerNumber ? "red" : "#cccdce",
+                        }),
+                      }}
+                    ></Select>
+                    {error && !registerNumber && (
+                      <div className="errorText">
+                        Please Enter Your Register Number
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="quesField">
+                  <div className="inp">Year Of Study</div>
+                  <div>
+                    <Select
+                      className="textField"
+                      options={years}
+                      onChange={handleYear}
+                      isSearchable
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          borderColor: error && !year ? "red" : "#cccdce",
+                        }),
+                      }}
+                      placeholder=""
+                    ></Select>
+                  </div>
+                </div>
+                <div className="quesField">
+                  <div className="inp">Special Lab</div>
+                  <div>
+                    <Select
+                      className="textField"
+                      options={labList}
+                      onChange={handleLab}
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          borderColor: error && !lab ? "red" : "#cccdce",
+                        }),
+                      }}
+                      isSearchable
+                      placeholder=""
+                    ></Select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="titdefault">
+              <h4>Course Details</h4>
+            </div>
+            <div className="Default">
+              <div className="dfinside">
+                <div className="quesField">
+                  <div className="inp">Course Platform</div>
+                  <div>
+                    <Select
+                      onChange={handleCourse}
+                      placeholder=""
+                      isSearchable
+                      className="textField"
+                      options={CourseList}
+                      styles={{
+                        control: (baseStyles, state) => ({
+                          ...baseStyles,
+                          borderColor: error && !course ? "red" : "#cccdce",
+                        }),
+                      }}
+                    />
+                    {error && !course && (
+                      <div className="errorText">Select course type</div>
+                    )}
+                    {/* {course && <div> Course : {course} </div>} */}
+                  </div>
+                </div>
+                <div className="quesField">
+                  <div className="inp">Name of the Course</div>
+                  <div>
+                    <Select
+                      onChange={handleCourseName}
+                      isSearchable
+                      className="textField"
+                      options={CourseNameList}
                       placeholder=""
                     />
                   </div>
                 </div>
-              ) : null}
+                {creditOpen ? (
+                  <>
+                    <div className="quesField">
+                      <div className="inp">Duration in Weeks</div>
+                      <div>
+                        <Select
+                          onChange={handleWeek}
+                          className="textField"
+                          options={weekList}
+                          placeholder=""
+                          isSearchable={false}
+                          value={
+                            weekList.length > 0
+                              ? {
+                                  value: weekList[0].value,
+                                  label: weekList[0].label,
+                                }
+                              : null
+                          }
+                        />
+                        {/* {selectedWeek && <div> Weeks : {selectedWeek} </div>} */}
+                      </div>
+                    </div>
+                    <div className="quesField">
+                      <div className="inp">No.of.Credits</div>
+                      <div>
+                        <Select
+                          onChange={handleCredits}
+                          className="textField"
+                          options={creditList}
+                          isSearchable={false}
+                          placeholder=""
+                          value={
+                            creditList.length > 0
+                              ? {
+                                  value: creditList[0].value,
+                                  label: creditList[0].label,
+                                }
+                              : null
+                          }
+                        />
+                        {/* {selectedCredits && <div> Credits : {selectedCredits} </div>} */}
+                      </div>
+                    </div>{" "}
+                  </>
+                ) : null}
+                <div className="quesField">
+                  <div className="inp">Semester</div>
+                  <div>
+                    <Select
+                      value={{
+                        value: selectedSem,
+                        label: selectedSem ? `Semester ${selectedSem}` : "",
+                      }}
+                      onChange={handleSem}
+                      className="textField"
+                      options={[
+                        { value: 1, label: "I" },
+                        { value: 2, label: "II" },
+                        { value: 3, label: "III" },
+                        { value: 4, label: "IV" },
+                        { value: 5, label: "V" },
+                        { value: 6, label: "VI" },
+                        { value: 7, label: "VII" },
+                        { value: 8, label: "VIII" },
+                      ]}
+                      isSearchable={false}
+                      placeholder=""
+                    />
+                    {/* {selectedSem && <div> Semester : {selectedSem} </div>} */}
+                  </div>
                 </div>
+                <div className="quesField">
+                  <div className="inp">Start Date</div>
+                  <div>
+                    <DatePicker
+                      className="textField"
+                      value={startDate}
+                      onChange={handleStartDateChange}
+                    />
+                  </div>
                 </div>
-
-              <div>
-              {/* {openings && handleValidation() ? ( setType(1) ) : ( setType(0) )} */}
+                <div className="quesField">
+                  <div className="inp">End Date</div>
+                  <div>
+                    <DatePicker
+                      className="textField"
+                      value={endDate}
+                      onChange={handleEndDateChange}
+                    />
+                    {/* {startDate && endDate && (
+                    <p>Number of days between selected dates: {numberOfDays}</p>
+                  )} */}
+                  </div>
+                </div>
+                <div className="quesField">
+                  <div className="inp">Exam Date</div>
+                  <div>
+                    <DatePicker
+                      className="textField"
+                      value={examDate}
+                      onChange={handleExamDate}
+                    />
+                  </div>
+                </div>
+                <div className="quesField">
+                  <div className="inp">Marks in Certificate</div>
+                  <div>
+                    <InputBox
+                      type="number"
+                      className="inputField"
+                      value={marks}
+                      onKeyDown={handleInputKeyDown}
+                      onchange={handleMarksChange}
+                    />
+                  </div>
+                </div>
+                {handleValidation() ? (
+                  <div className="quesField">
+                    <div className="inp">Do You Want Course Exception</div>
+                    <div>
+                      <Select
+                        value={{
+                          value: opinion,
+                          label:
+                            opinion === 1 ? "Yes" : opinion === 0 ? "No" : "",
+                        }}
+                        onChange={handleOpinion}
+                        className="textField"
+                        options={[
+                          { value: "", label: "" },
+                          { value: 1, label: "Yes" },
+                          { value: 0, label: "No" },
+                        ]}
+                        placeholder=""
+                      />
+                    </div>
+                  </div>
+                ) : null}
               </div>
-              {openings && handleValidation() ? (
-                <div>
-                <div className='titdefault' ><h4>Apply For Course Exception</h4></div>
-                <div className='Default' >
-                <div className='dfinside' >
-                <div className="exp">
-                  <div className="quesField">
-                    <div className="inp">Exam Date</div>
-                    <div>
-                      <DatePicker
-                        className="textField"
-                        value={examDate}
-                        onChange={handleExamDate}
-                      />
-                    </div>
-                  </div>
-                  <div className="quesField">
-                    <div className="inp">Marks in Certificate</div>
-                    <div>
-                      <TextField
-                        size="small"
-                        className="textField"
-                        id="outlined-basic"
-                        variant="outlined"
-                      />
-                    </div>
-                  </div>
-                  <div className="quesField">
-                    <div className="inp">Certificate URL</div>
-                    <InputBox/>
-                  </div>
-                  <div className="quesDoc">
-                    <div>Upload Certificate </div>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      <label htmlFor="pdf-upload" className="pdf-upload-button">
-                        Upload PDF
-                        <input
-                          id="pdf-upload"
-                          type="file"
-                          accept=".pdf"
-                          onChange={handleFileChange}
-                          style={{ display: "none" }}
-                        />
-                      </label>
-                      <div style={{ margin: "5px" }}>
-                        {" "}
-                        {selectedFile && (
-                          <p>Selected file: {selectedFile.name}</p>
-                        )}{" "}
-                      </div>
-                    </div>
-                  </div>
-                  {/* <div className="quesField">
-                    <div className="inp">IQAC Verification</div>
-                    <div>
-                    <InputBox/>
-                    </div>
-                  </div> */}
-                  <div className="EXPsubmits">
-                    <button className="expCancelBtn">Cancel</button>
-                    <button className="expCreateBtn" onClick={modifyPdf}>
-                      Create
-                    </button>
-                  </div>
-                </div>
-                </div>
-                </div>
-                </div>
-              ) : (
-                <div>
-                <div className='titdefault' ><h4>Apply For Rewards</h4></div>
-                <div className='Default' >
-                <div className='dfinside' >
-                <div className="rp">
-                  <div className="quesField">
-                    <div className="inp">Certificate URL</div>
-                    <div>
-                    <input
-                      type='text'
-                      className='textField'
-                      value={certificateUrl}
-                      onChange={handleCerfUrl}
-                    ></input>
-                    </div>
-                  </div>
-                  <div className={handleValidation() ? "quesDoc" : "quesDocRp"}>
-                    <div>Upload Certificate </div>
-                    <div style={{ display: "flex", flexDirection: "row" }}>
-                      <label htmlFor="pdf-upload" className="pdf-upload-button">
-                        Upload PDF
-                        <input
-                          id="pdf-upload"
-                          type="file"
-                          required 
-                          accept="application/pdf"
-                          onChange={handleFileChange}
-                          style={{ display: "none" }}
-                        />
-                      </label>
-                      <div style={{ margin: "5px" , marginRight:"50px" }}>
-                        {" "}
-                        {selectedPdf && (
-                          <p>Selected file: {selectedPdf.name}</p>
-                        )}{" "}
-                      </div>
-                    </div>
-                  </div>
-                  {/* <div className="quesField">
-                    <div className="inp">IQAC Verification</div>
-                    <div>
-                    <InputBox/>
-                    </div>
-                  </div> */}
-                  <div className="RPsubmits">
-                    <button className="expCancelBtn">Cancel</button>
-                    <button className="expCreateBtn" onClick={handleSubmit1} >Create</button>
-                  </div>
-                </div>
-                </div>
-                </div>
-                </div>
-              )}
             </div>
+
+            <div>
+              {/* {openings && handleValidation() ? ( setType(1) ) : ( setType(0) )} */}
+            </div>
+            {openings && handleValidation() ? (
+              <div>
+                <div className="titdefault">
+                  <h4>Apply For Course Exception</h4>
+                </div>
+                <div className="Default">
+                  <div className="dfinside">
+                    <div className="exp">
+                      <div className="quesField">
+                        <div className="inp">Certificate URL</div>
+                        <InputBox
+                          type="text"
+                          className="inputField"
+                          value={certificateUrlExp}
+                          onchange={handleCerfUrlExp}
+                        />
+                      </div>
+                      <div className="quesDoc">
+                        <div>Upload Certificate </div>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <label
+                            htmlFor="pdf-upload"
+                            className="pdf-upload-button"
+                          >
+                            Upload PDF
+                            <input
+                              id="pdf-upload"
+                              type="file"
+                              accept=".pdf"
+                              onChange={handleFileChangeExp}
+                              style={{ display: "none" }}
+                            />
+                          </label>
+                          <div style={{ margin: "5px" }}>
+                            {" "}
+                            {selectedFile && (
+                              <p>Selected file: {selectedFile.name}</p>
+                            )}{" "}
+                          </div>
+                        </div>
+                      </div>
+                      {/* <div className="quesField">
+                    <div className="inp">IQAC Verification</div>
+                    <div>
+                    <InputBox/>
+                    </div>
+                  </div> */}
+                      <div className="EXPsubmits">
+                        <button className="expCancelBtn" onClick={()=>navigate('/Online Course')} >Cancel</button>
+                        <button className="expCreateBtn" onClick={sendDataToBackendExp}>
+                          Create
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="titdefault">
+                  <h4>Apply For Rewards</h4>
+                  {/* <div> { alertingUser() && <div>You are not eligible for Course Excemption <button className='ReasonBtn' onClick={() => setReasonOpen(true)} >View Reason</button> </div>}</div> */}
+                  <div>{restrictingUser() ? <div>You are Restricted to apply Course Exception <button className='ReasonBtn' onClick={handleRestrict} >View Reason</button> </div> : alertingUser() ? <div>You are not eligible for Course Excemption <button className='ReasonBtn' onClick={() => setReasonOpen(true)} >View Reason</button> </div>: null} </div>
+                </div>
+                <div className="Default">
+                  <div className="dfinside">
+                    <div className="rp">
+                      <div className="quesField">
+                        <div className="inp">Certificate URL</div>
+                        <div>
+                          <InputBox
+                            type="text"
+                            className="textField"
+                            value={certificateUrlRp}
+                            onchange={handleCerfUrlRp}
+                          />
+                        </div>
+                      </div>
+                      <div
+                        className={handleValidation() ? "quesDoc" : "quesDocRp"}
+                      >
+                        <div>Upload Certificate </div>
+                        <div style={{ display: "flex", flexDirection: "row" }}>
+                          <label
+                            htmlFor="pdf-upload"
+                            className="pdf-upload-button"
+                          >
+                            Upload PDF
+                            <input
+                              id="pdf-upload"
+                              type="file"
+                              accept=".pdf"
+                              onChange={handleFileChangeRp}
+                              style={{ display: "none" }}
+                            />
+                          </label>
+                          <div style={{ margin: "5px", marginRight: "50px" }}>
+                            {" "}
+                            {selectedPdfRp && (
+                              <p>Selected file: {selectedPdfRp.name}</p>
+                            )}{" "}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="RPsubmits">
+                        <button className="expCancelBtn">Cancel</button>
+                        <button
+                          className="expCreateBtn"
+                          onClick={sendDataToBackendRp}
+                        >
+                          Create
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
+      </div>
+      <Modal open={reasonOpen} onClose={() => setReasonOpen(false)}>
+        <Box sx={style}>
+          <div className='reasonModal'>
+          <div style={{fontWeight:"bold",marginBottom:"5px"}}>
+            Reason :
+          </div>
+          <div>
+          {(selectedCredits < validCredit)&& <div style={{display:"flex",flexDirection:"row",gap:"5px"}}><div style={{marginTop:"8px"}}><AnnouncementIcon/></div><div  style={{marginTop:"5px"}}>You are not Having Sufficient Credits</div></div>}
+          {(selectedSem < validSemester)&& <div style={{display:"flex",flexDirection:"row",gap:"5px"}}><div style={{marginTop:"8px"}}><AnnouncementIcon/></div><div  style={{marginTop:"5px"}}>You are not above semester 4</div></div>}
+          {(selectedWeek < validWeek)&&<div style={{display:"flex",flexDirection:"row",gap:"5px"}}><div style={{marginTop:"8px"}}><AnnouncementIcon/></div><div  style={{marginTop:"5px"}}>Your Course is not a 12 week course</div></div>}
+          </div>
+          </div>
+        </Box>
+      </Modal>
+      <Modal open={dataRespModal} onClose={handleRespModalClose}>
+      <Box sx={style1} className='success'>
+          <div>
+            {responseMessage}
+          </div>
+          <div className='tick'>
+            {isSuccess?<CheckCircleIcon/>:<AnnouncementIcon/>}
+          </div>
+        </Box>
+      </Modal>
+      <Modal open={restrictModal} onClose={() => setRestrictModal(false)}>
+        <Box sx={style}>
+          <div>
+            {approvedStatus ? <div className='success'><CheckCircleIcon/>You have Already completed the 2 Course Excemption</div>:<div><div className='restrictReason'>until completion of your approval status you cannot able to apply again for excemption...<AnnouncementIcon/></div><div><button className="btnApprove" onClick={()=> navigate("/Online Course")} >View Status</button></div></div>}
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 }

@@ -4,13 +4,13 @@
 }
 
 body {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 :root {
   --hover: #FBFBFB;
   --button: #116ACC;
-  --card: #FEFEFE;
+  --card: #FEFEFE;  
   --card-1: #FEFEFE;
   --card-2: #FEFEFE;
   --text-black: #2B3674;

@@ -68,9 +68,6 @@
     font-size: 12px;
 }
 
-.exp{
-    margin-top: 20px;
-}
 .exception{
     margin-bottom: 20px;
     font-weight: bold;
@@ -113,4 +110,25 @@
     border-radius: 5px;
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
+}
+
+.ReasonBtn{
+    padding: 2px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    padding-left: 3px;
+    padding-right: 3px;
+    border-radius: 3px;
+}
+.reasonModal{
+    font-family: 'Poppins', sans-serif;
+    color: var(--heading-crsExp);
+}
+
+.restrictReason{
+    margin-bottom: 10px;
+    font-family: 'Poppins', sans-serif;
+    color:  rgb(250, 41, 41);
+    gap: 10px;
 }

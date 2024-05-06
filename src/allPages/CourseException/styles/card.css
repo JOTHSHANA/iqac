@@ -1,13 +1,11 @@
 .card {
-    background-color: white;
-    color: var(--text-black);
-    border-radius: 5px;
-    width: 200px;
+    border-radius: 10px;
+    width: 250px;
     margin: 5px;
     line-height: 25px;
     display: flex;
     flex-direction: column;
-    box-shadow: 2px 2px 2px 2px lightgray;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .card-image-container{
@@ -26,12 +24,11 @@
 }
 
 .card-title{
-    color: #2B3674;
+    font-size: 17px;
+    font-weight: 700;
     font-family: 'Poppins', sans-serif;
-    font-size: 15px;
-    text-align: center;
 }
 
-/* .card-body{
+.card-body{
     font-weight: 550;
-} */
+}

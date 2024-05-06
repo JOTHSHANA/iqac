@@ -53,7 +53,6 @@ const lightModeProperties = {
     '--heading-crsExp':'#2B3674'
     
 };
-
 // Set custom properties based on theme mode
 const setCustomProperties = (mode) => {
     const root = document.documentElement;
