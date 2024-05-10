@@ -18,7 +18,7 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 330,
+  width: 290,
   bgcolor: 'background.paper',
   borderRadius:'10px',
   boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
@@ -945,7 +945,7 @@ const OnlineForm = () => {
                         className={handleValidation() ? "quesDoc" : "quesDocRp"}
                       >
                         <div>Upload Certificate </div>
-                        <div style={{ display: "flex", flexDirection: "row" }}>
+                        <div className='Rp-btn-and-selected-file'>
                           <label
                             htmlFor="pdf-upload"
                             className="pdf-upload-button"
@@ -962,7 +962,7 @@ const OnlineForm = () => {
                           <div style={{ margin: "5px", marginRight: "50px" }}>
                             {" "}
                             {selectedPdfRp && (
-                              <p>Selected file: {selectedPdfRp.name}</p>
+                              <p className='selectedFileName'>{selectedPdfRp.name}</p>
                             )}{" "}
                           </div>
                         </div>

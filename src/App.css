@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Manrope:wght@400;500&family=Poppins&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -37,7 +39,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 2px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -50,7 +52,7 @@ body {
 }
 
 ::-webkit-scrollbar-horizontal {
-  height: 5px;
+  height: 2px;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
@@ -59,7 +61,7 @@ body {
 
 ::-webkit-scrollbar-track:horizontal {
   background-color: var(--card);
-}
+} 
 
 
 
@@ -70,53 +72,3 @@ body {
 
 
 
-
-
-
-/* 
-
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-} */

@@ -125,3 +125,16 @@
     flex-direction: row-reverse;
     font-family: 'Poppins', sans-serif;
 }
+
+.modalBox{
+    
+    top: '50%';
+    left: '50%';
+    transform: 'translate(-50%, -50%)';
+    width: 300; 
+    max-width: 350;
+    background-color: 'background.paper';
+    box-shadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;';
+    padding: 4;
+    border-radius:'10px';
+}

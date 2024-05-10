@@ -162,7 +162,7 @@ const OnlineReports = () => {
       <div>
         <div className='hometable'>
         <div className="tableMain">
-          < div className="datagrid">
+          <div className="datagrid">
             <DataGrid
               autoHeight
               rows={data}
@@ -173,6 +173,8 @@ const OnlineReports = () => {
                 overflowX: "auto", // Enable horizontal scrolling
                 "& .super-app-theme--header": {
                   color: "var(--heading-crsExp)",
+                  display: "flex",
+                  alignItems: "center",
                   justifyContent: "center",
                 },
                 "& .MuiDataGrid-columnsContainer": {

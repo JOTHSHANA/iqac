@@ -14,11 +14,13 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: '75%', // Adjusted width for larger screens
+    maxWidth: '390px', // Maximum width for smaller screens
     bgcolor: 'background.paper',
     boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
     p: 4,
     borderRadius:'10px',
+    
   };
 
   const style1 = {
@@ -51,7 +53,8 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 340,
+    width: '75%', // Adjusted width for larger screens
+    maxWidth: '360px', // Maximum width for smaller screens
     bgcolor: 'background.paper',
     boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
     borderRadius:'10px',
@@ -220,7 +223,7 @@ const FacultyModal = ({rowData, open, handleClose, fetchData}) => {
               className='remarkArea'
               onChange={handleRemarkChange}
               rows={3}
-              cols={40}
+              cols={38}
               placeholder="Enter your remark here..."
             ></textarea>
             {remark===""?<button className='CourseBtn' disabled={true} >Submit Remark</button>:<button className='btnApprove' onClick={handleRemarkSubmit}>Submit Remark</button>}
@@ -231,6 +234,7 @@ const FacultyModal = ({rowData, open, handleClose, fetchData}) => {
       <Modal
         open={responseModalOpen}
         onClose={handleResponseModalClose}
+        style={{ zIndex: 6000 }}
       >
         <Box sx={style1} className='success'>
           <div>
@@ -245,6 +249,7 @@ const FacultyModal = ({rowData, open, handleClose, fetchData}) => {
       <Modal
         open={remarkResponse}
         onClose={setRemarkResponseClose}
+        style={{ zIndex: 6000 }}
       >
         <Box sx={style1} className='success'>
         <div>

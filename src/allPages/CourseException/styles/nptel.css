@@ -132,3 +132,47 @@
     color:  rgb(250, 41, 41);
     gap: 10px;
 }
+
+.Rp-btn-and-selected-file{
+    display: flex;
+    flex-direction: row;
+}  
+
+@media (max-width: 1040px) {
+    .quesField{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        gap: 5%;
+    }
+    .textField{
+        width: 40vh;
+    }
+    .inp{
+        display: flex;
+        justify-content: flex-start;
+    }
+    .quesDoc{
+        display: flex;
+        flex-direction: column;
+        /* gap: 48px; */
+        gap: 9%;
+        margin-bottom: 20px;
+    }
+    .quesDocRp{
+        display: flex;
+        flex-direction: column;
+        /* gap: 48px; */
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    .Rp-btn-and-selected-file{
+        display: flex;
+        flex-direction: row;
+        gap: 50px;
+    }   
+    .selectedFileName{
+        font-size: 10px;
+    }
+    
+}

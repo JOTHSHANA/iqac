@@ -116,10 +116,11 @@ const CourseApproval = () => {
         </div>
       </div>
       <div>
-        <div className='hometable'>
+        <div className="hometable">
         <div className="tableMain">
           <div className="datagrid">
             <DataGrid
+              className='dat'
               autoHeight
               rows={data}
               columns={columns}

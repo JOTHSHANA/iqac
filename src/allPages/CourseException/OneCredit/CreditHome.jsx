@@ -13,7 +13,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 700,
+  width: '70%', // Adjusted width for larger screens
+  maxWidth: '650px', // Maximum width for smaller screens
   bgcolor: 'background.paper',
   borderRadius:'10px',
   boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
@@ -25,7 +26,8 @@ const style1 = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: '65%', // Adjusted width for larger screens
+  maxWidth: '300px', // Maximum width for smaller screens
   bgcolor: 'background.paper',
   borderRadius:'10px',
   boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
@@ -234,6 +236,15 @@ const CreditHome = () => {
         navigate("/courseExcp")
       }
 
+      const validateButton = () => {
+        if(selectedCourses.length==3){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+
   return (
     <div className='creditHomeMain' >
         <div className='titleBtn' >
@@ -255,7 +266,9 @@ const CreditHome = () => {
               localeText={customLocaleText}
               sx={{
                 width: "80%", // Set width to 80%
-                overflowX: "auto", // Enable horizontal scrolling
+                overflowX: "auto",
+                display:"flex",
+                justifyContent:"space-between",
                 "& .super-app-theme--header": {
                   color: "var(--heading-crsExp)",
                 },
@@ -290,7 +303,8 @@ const CreditHome = () => {
             </div>
             <div className='modalbtns'>
               <div><button className='btncancel' onClick={()=> setShowModal(false)} >Cancel</button></div>
-              <div><button className='btnapply' onClick={handleApply} >Apply</button></div>
+              {validateButton()?
+              <div><button className='btnapply' onClick={handleApply} >Apply</button></div> : <div><button  className='CourseBtn' disabled={true}>Apply</button></div>}
             </div>
           </div>
         </Box>

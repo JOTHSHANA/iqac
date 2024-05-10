@@ -92,3 +92,13 @@
     justify-content: space-between;
     margin-bottom: 20px;
 }
+
+@media (max-width: 1040px) {
+    .onecreditSelection{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        gap: 8px;
+    }
+}

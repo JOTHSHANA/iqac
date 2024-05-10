@@ -14,7 +14,8 @@ const style = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 500,
+  width: '75%', // Adjusted width for larger screens
+  maxWidth: '390px', // Maximum width for smaller screens
   bgcolor: 'background.paper',
   boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
   borderRadius:'10px',
